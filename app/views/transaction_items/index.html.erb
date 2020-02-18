@@ -87,6 +87,8 @@
               <td></td>
             </tr>
 
+            <% break if @debt.amortization_type == 'price' %>
+
           <% end %>
         <% end %>
 

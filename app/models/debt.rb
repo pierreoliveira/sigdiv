@@ -166,9 +166,11 @@ class Debt < ApplicationRecord
 
 	def projection_start_date
 		if in_grace_period? 
-			grace_period
-		elsif in_amortization_period?
-			amortizations.last.date + 1.month
+			frequency = transaction_infos.find_by(category_number: 3).frequency
+			interests.last.date + TransactionInfo.frequencies[frequency].months
+		elsif in_amortization_period?			
+			frequency = transaction_infos.find_by(category_number: 2).frequency
+			amortizations.last.date + TransactionInfo.frequencies[frequency].months 
 		else done?
 			false
 		end
