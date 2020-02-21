@@ -4,5 +4,9 @@ class FutureTransaction < TransactionItem
 	def editable?
 		false
 	end
+
+	def in_days		
+		date - (date - transaction_info.frequency_before_type_cast.months)
+	end
 		
 end

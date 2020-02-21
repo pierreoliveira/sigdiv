@@ -47,4 +47,5 @@ class TransactionInfo < ApplicationRecord
 	def order
 		category.order
 	end
+
 end

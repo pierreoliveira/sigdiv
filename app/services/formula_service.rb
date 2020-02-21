@@ -1,36 +1,41 @@
 class FormulaService
-	VARIABLES = {	'SALDO' => :outstanding_balance,
-								'VALOR_CONTRATO' => :contract_value,
-								'JUROS' => :interest_rate,
-								'PARCELAS' => :loan_term,
-								'N_PARCELA' => :amortizations_count,
-								'PGTO'	=> :next_instalment,
-								'DiNi' 	=> [:withdraw, :value, :period] }
+	VARIABLES = {	'SALDO' => [ 'ProjectionDebt', :outstanding_balance ],
+								'VALOR_CONTRATO' => [ 'ProjectionDebt', :contract_value ],
+								'JUROS' => [ 'ProjectionDebt', :interest_rate ],
+								'PARCELAS' => [ 'ProjectionDebt', :loan_term ],
+								'N_PARCELA' => [ 'ProjectionDebt', :amortizations_count ],
+								'PGTO'	=> [ 'ProjectionDebt', :next_instalment ],
+								'DiNi' 	=> [ 'ProjectionDebt', [:withdraw, :value, :period] ],
+								'DELTA_DATA' => [ 'FutureTransaction', :in_days ]
+							}
 	
 	class << self
 		
-		def eval formula, debt		
-			Dentaku(parse(formula, debt))
+		def eval transaction
+			Dentaku(parse(transaction))
 		end
 
-		def parse formula, debt
-			if (formula.match(/\[SOMA\(.*\)\]/))
-				formula.gsub!(/\[SOMA\(.*\)\]/, summation(formula.match(/\[SOMA\((.*)\)\]/).captures.first, debt).to_s)
+		def parse transaction
+			if (transaction.transaction_info.formula.match(/\[SOMA\(.*\)\]/))
+				transaction.transaction_info.formula.gsub!(/\[SOMA\(.*\)\]/, summation(transaction.transaction_info.formula.match(/\[SOMA\((.*)\)\]/).captures.first, transaction.debt).to_s)
 			end
 			
-			result = formula.dup			
-			formula.gsub(/\[(\w*)\]/) do	
-							
-				method_name = VARIABLES[$1]							
+			result = transaction.transaction_info.formula.dup			
+			transaction.transaction_info.formula.gsub(/\[(\w*)\]/) do	
 				
-				result.gsub!("[#{$1}]", send_method(debt, method_name))		
+				klass = VARIABLES[$1].first				
+				klass == 'ProjectionDebt' ? object = transaction.projection_debt : object = transaction
+				
+				method_name = VARIABLES[$1].last
+				
+				result.gsub!("[#{$1}]", send_method(object, method_name))		
 			end
 			
 			result
 		end
 
-		def send_method debt, method_name			
-			debt.send(method_name).to_s			
+		def send_method object, method_name			
+			object.send(method_name).to_s			
 		end
 
 		def summation formula, debt

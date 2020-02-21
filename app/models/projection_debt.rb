@@ -11,44 +11,9 @@ class ProjectionDebt
 		self.amortizations_count = start_date_to_amortizations_count
 		self.transaction_items = build_transaction_items
 	end
-
+	
 	def build_transaction_items
-		debt.amortization_type == 'sac' ? build_projection_sac : build_projection_price
-	end
-
-	def build_projection_price
 		result = []		
-
-		projection_period.each do |future_transaction_count|
-
-			debt.transaction_infos.sort_by(&:order).reject(&:withdraw?).each do |transaction_info|
-
-				if (result.empty?) 
-					self.balance_projection = debt.amortizations.where('date <= ?', self.start_date).last.final_outstanding_balance
-				else 
-					self.balance_projection = result.last.final_outstanding_balance
-				end
-
-				value = FormulaService.eval(transaction_info.formula, self)
-
-				result << FutureTransaction.new(debt: debt,
-																				projection_debt: self,
-																				transaction_info: transaction_info,
-																				value: value,
-																				value_brl: value * exchange_rate, 
-																				date: transaction_info.payment_date(self.start_date) + future_transaction_count.months - 1.month, 
-																				start_balance: balance_projection)
-				
-				self.amortizations_count += 1 if transaction_info.amortization?
-			end
-
-		end
-
-		result
-	end
-
-	def build_projection_sac		
-		result = []
 
 		projection_period.each_with_index do |future_transaction_count, index|
 
@@ -59,18 +24,19 @@ class ProjectionDebt
 				else 
 					self.balance_projection = result.last.final_outstanding_balance
 				end
-
-				if index % TransactionInfo.frequencies[transaction_info.frequency] == 0					
-					value = FormulaService.eval(transaction_info.formula, self)
-
-					result << FutureTransaction.new(debt: debt,
+				
+				if !(transaction_info.amortization? && debt.in_grace_period?) && (index % transaction_info.frequency_before_type_cast == 0)
+					future_transaction = FutureTransaction.new(debt: debt,
 																					projection_debt: self,
-																					transaction_info: transaction_info,
-																					value: value,
-																					value_brl: value * exchange_rate, 
-																					date: transaction_info.payment_date(self.start_date) + future_transaction_count.months - 2.months, 
-																					start_balance: balance_projection) 
-					
+																					transaction_info: transaction_info,																					
+																					date: transaction_info.payment_date(self.start_date) + future_transaction_count.months - 1.month, 
+																					start_balance: balance_projection)
+
+					future_transaction.value = FormulaService.eval(future_transaction)
+					future_transaction.value_brl = future_transaction.value * exchange_rate
+
+					result << future_transaction
+
 					self.amortizations_count += 1 if transaction_info.amortization?
 				end
 			end
