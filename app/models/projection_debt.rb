@@ -64,7 +64,7 @@ class ProjectionDebt
 
 	def projection_period
 		if debt.in_grace_period? 
-			1..grace_period_in_months(self.start_date)
+			self.start_date.present? ? 1..grace_period_in_months(self.start_date) : 0..0
 		elsif debt.in_amortization_period?
 			1..(debt.loan_term - debt.paid_payments_count(:amortizations, self.start_date))
 		else debt.done?
