@@ -79,6 +79,7 @@ class TransactionItemsController < ApplicationController
                                           :transaction_info_id,  
                                           :id,
                                           :internalization_date,
+                                          :formula,
                                           :confirmed)
     end
 end

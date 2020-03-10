@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_25_174708) do
+ActiveRecord::Schema.define(version: 2020_03_10_150056) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(version: 2019_10_25_174708) do
     t.integer "category_number"
     t.string "slug"
     t.decimal "base"
+    t.boolean "bind_withdraw"
   end
 
   create_table "transaction_items", force: :cascade do |t|
@@ -86,6 +87,7 @@ ActiveRecord::Schema.define(version: 2019_10_25_174708) do
     t.datetime "updated_at", null: false
     t.date "internalization_date"
     t.boolean "confirmed"
+    t.string "formula"
   end
 
 end

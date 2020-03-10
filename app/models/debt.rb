@@ -176,6 +176,10 @@ class Debt < ApplicationRecord
 		end
 	end
 
+	def paid_in?
+		withdraws.sum(:value) == contract_value
+	end
+
 	private
 
 		def self.date_range_from_year year

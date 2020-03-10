@@ -95,7 +95,8 @@ class DebtsController < ApplicationController
                                                                   :description,                                                                  
                                                                   :frequency,
                                                                   :slug,
-                                                                  :category_number
+                                                                  :category_number,
+                                                                  :bind_withdraw
                                                                   ])
     end
 end

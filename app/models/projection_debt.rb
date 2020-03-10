@@ -25,7 +25,7 @@ class ProjectionDebt
 					self.balance_projection = result.last.final_outstanding_balance
 				end
 				
-				if !(transaction_info.amortization? && debt.in_grace_period?) && (index % transaction_info.frequency_before_type_cast == 0)
+				if (in_amortization_period? transaction_info, future_transaction_count) && (index % transaction_info.frequency_before_type_cast == 0)
 					future_transaction = FutureTransaction.new(debt: debt,
 																					projection_debt: self,
 																					transaction_info: transaction_info,																					
@@ -35,7 +35,7 @@ class ProjectionDebt
 					future_transaction.value = FormulaService.eval(future_transaction)
 					future_transaction.value_brl = future_transaction.value * exchange_rate
 
-					result << future_transaction
+					result << future_transaction unless transaction_info.bind_withdraw? && paid_in?
 
 					self.amortizations_count += 1 if transaction_info.amortization?
 				end
@@ -72,8 +72,12 @@ class ProjectionDebt
 		end		
 	end
 
-	def grace_period_in_months end_date
-		(debt.grace_period_payments_number + debt.loan_term - debt.paid_payments_count(:interests, end_date))
+	def grace_period_in_months end_date		
+		(debt.grace_period_payments_number + (loan_term_in_months) - debt.paid_payments_count(:interests, end_date))
+	end
+
+	def loan_term_in_months
+		transaction_infos.find_by(category_number: 2).frequency_before_type_cast * (debt.loan_term )
 	end
 
 	def start_date_to_amortizations_count
@@ -82,6 +86,14 @@ class ProjectionDebt
 
 	def outstanding_balance
 		self.balance_projection	
+	end
+
+	def in_amortization_period? transaction_info, future_transaction_count
+		if transaction_info.amortization?
+			transaction_info.payment_date(self.start_date) + future_transaction_count.months - 1.month > grace_period
+		else
+			true
+		end
 	end
 
 	private

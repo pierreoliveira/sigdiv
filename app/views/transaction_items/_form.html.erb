@@ -4,9 +4,16 @@
     <%= f.input :transaction_info_id, as: :hidden %>
     <%= f.input :value_brl, as: :string, input_html: {value: f.object.value_brl || '0.00', class: 'currency-brl'} %> 
     <%= f.input :exchange_rate,  as: :string, input_html: {class: 'currency_exchange_rate'}%>
-    <%= f.input :value , as: :string, input_html: {class: 'currency'} %> 
+    <div class="row">
+      <div class="col-6">
+        <%= f.input :value , as: :string, input_html: {class: 'currency'} %>
+      </div>
+      <div class="col-6">
+        <%= f.input :formula %>
+      </div>
+    </div>
     <%= f.input :date, as: :date, label: 'Data de liberação' %>
-    <%= f.input :internalization_date, as: :date if debt.externo? %>
+    <%= f.input :internalization_date, as: :date, include_blank: true if debt.externo? %>    
     <%= f.input :confirmed, wrapper_html: {class: 'pull-right'} if transaction_item.withdraw? %>
   </div>
 <% end %>

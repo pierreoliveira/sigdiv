@@ -18,6 +18,11 @@
 		<div class="col-sm">
 		  <%= f.input :payment_day %>
 		</div>
+		<div class="col-1 trash-charge-container">
+			<%= link_to_remove_association fa_icon("times-circle 2x", title: "Remover encargo") , f, class: 'text-danger' %>
+		</div>
+	</div>
+	<div class="row">
 		<div class="col-sm">
 			<%= f.input :frequency, as: :radio_buttons, collection: TransactionInfo.frequencies.keys, label_method: :titleize %>
 		</div>
@@ -28,9 +33,12 @@
 		  <% f.object.new_record? ? slug = f.object.category.slug : slug = f.object.slug %>
 		  <%= f.input :slug, input_html: {value: slug} %>
 		</div>
-		<div class="col-1 trash-charge-container">
-			<%= link_to_remove_association fa_icon("times-circle 2x", title: "Remover encargo") , f, class: 'text-danger' %>
+		<div class="col-sm">
+			<%= f.input :bind_withdraw%>
 		</div>
+
+		
 	</div>
+	<hr>
 </div>
 
