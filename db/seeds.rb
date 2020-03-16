@@ -32,7 +32,7 @@ Debt.create!( code: 123789,
 							signature_date: "2016-11-30", 
 							creditor_id: creditor2.id, 
 							grace_period: "2021-05-30", 
-							amortization_period: "2024-11-30", 
+							amortization_period: "2028-11-30", 
 							purpose: "Programa região oceânica sustentável",							
 							amortization_type: 0,
 							financial_agent_id: creditor1.id,
@@ -54,9 +54,9 @@ charges_adm = TransactionInfo.create!(category_number: 4, debt: Debt.first, paym
 charges_risc = TransactionInfo.create!(category_number: 4, debt: Debt.first, payment_day:'15', base: 0.7, description:'Taxa Risco', formula: "[SALDO] * (0.007 / 12)", slug: 'TR', frequency: 1)
 
 withdraw_caf = TransactionInfo.create!(category_number: 1, debt: Debt.last, payment_day:'30', formula: "", slug: 'D')
-amortization_caf = TransactionInfo.create!(category_number: 2, debt: Debt.last, payment_day:'30', formula: "[SALDO] / [PARCELAS] - [N_PARCELA]", slug: 'A', frequency: 6)
-interest_caf = TransactionInfo.create!(category_number: 3, debt: Debt.last, payment_day:'30', formula: "[SALDO] * [JUROS]", slug: 'J', frequency: 6)
-charges_cc_caf = TransactionInfo.create!(category_number: 4, debt: Debt.last, payment_day:'30', base: 0.35, description:'Comissão de crédito', formula: "([VALOR_CONTRATO] - [SALDO]) * (0.35 / (360 * 6))", slug: 'CC', frequency: 6)
+amortization_caf = TransactionInfo.create!(category_number: 2, debt: Debt.last, payment_day:'30', formula: "[SALDO] / ([PARCELAS] - [N_PARCELA])", slug: 'A', frequency: 6)
+interest_caf = TransactionInfo.create!(category_number: 3, debt: Debt.last, payment_day:'30', formula: "[SALDO] * ((1.95 / 100 / 360) * [DELTA_DATA])", slug: 'J', frequency: 6)
+charges_cc_caf = TransactionInfo.create!(category_number: 4, debt: Debt.last, payment_day:'30', base: 0.35, description:'Comissão de crédito', formula: "([VALOR_CONTRATO] - [SALDO]) * ((0.35 / 100 / 360) * [DELTA_DATA])", slug: 'CC', frequency: 6)
 
 puts Date.new(2015, 5, 8)
 
@@ -3136,6 +3136,19 @@ TransactionItem.create!(
 	confirmed: true
 )
 
+value = BigDecimal('987323.42')
+exchange_rate = BigDecimal('4.0370')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2019, 11, 30),
+	value_brl: value * exchange_rate,
+	exchange_rate: exchange_rate,
+	transaction_info: interest_caf,
+	start_balance: BigDecimal('39939373.97'),
+	confirmed: true
+)
+
 value = BigDecimal('155517.30')
 exchange_rate = BigDecimal('3.2330')
 
@@ -3181,6 +3194,19 @@ exchange_rate = BigDecimal('4.0370')
 TransactionItem.create!(
 	value: value,
 	date: Date.new(2019, 05, 30),
+	value_brl: value * exchange_rate,
+	exchange_rate: exchange_rate,
+	transaction_info: charges_cc_caf,
+	start_balance: BigDecimal('39939373.97'),
+	confirmed: true
+)
+
+value = BigDecimal('107441.79')
+exchange_rate = BigDecimal('4.0370')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2019, 11, 30),
 	value_brl: value * exchange_rate,
 	exchange_rate: exchange_rate,
 	transaction_info: charges_cc_caf,

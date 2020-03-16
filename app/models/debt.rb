@@ -160,6 +160,10 @@ class Debt < ApplicationRecord
 		(grace_period.year * 12 + grace_period.month) - (signature_date.year * 12 + signature_date.month)
 	end
 
+	def until_first_payment_in_months
+		(interests.first.date.year * 12 + interests.first.date.month) - (signature_date.year * 12 + signature_date.month)
+	end
+
 	def paid_payments_count payment_type, end_date
 		send(payment_type).where('date <= ?', end_date).count
 	end
@@ -177,7 +181,7 @@ class Debt < ApplicationRecord
 	end
 
 	def paid_in?
-		withdraws.sum(:value) == contract_value
+		withdraws.sum(:value) >= contract_value
 	end
 
 	private

@@ -1,10 +1,10 @@
 <div class='nested-fields'>
 	<div class="row">		
 
-    <div class="col-sm">	
+    <div class="col-sm-2">	
 		  <%= f.input :category_number, collection: TransactionInfo::BASIC_TYPES.map {|k, v| [k, v[:name]]}, label_method: :last, value_method: :first, selected: f.object.category_number, input_html: { class: 'category' } %>
 		</div>
-		<div class="col-1">
+		<div class="col-2">
 			<%= f.input :base %>
 		</div>
    	<div class="col-sm">
@@ -14,16 +14,16 @@
 		<!-- Button trigger modal -->
       <%= link_to fa_icon("question-circle 2x", title: "Ver variáveis de fórmula disponíveis"), '#', 'data-toggle': "modal", 'data-target': "#formula_modal", class: 'text-secondary' %>
     </div>
-
-		<div class="col-sm">
-		  <%= f.input :payment_day %>
-		</div>
+		
 		<div class="col-1 trash-charge-container">
 			<%= link_to_remove_association fa_icon("times-circle 2x", title: "Remover encargo") , f, class: 'text-danger' %>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-sm">
+		<div class="col-sm-2">
+		  <%= f.input :payment_day %>
+		</div>
+		<div class="col-sm-2">
 			<%= f.input :frequency, as: :radio_buttons, collection: TransactionInfo.frequencies.keys, label_method: :titleize %>
 		</div>
 		<div class="col-sm">
@@ -33,12 +33,12 @@
 		  <% f.object.new_record? ? slug = f.object.category.slug : slug = f.object.slug %>
 		  <%= f.input :slug, input_html: {value: slug} %>
 		</div>
+		<div class="col-sm-2"></div>
+	</div>
 		<div class="col-sm">
 			<%= f.input :bind_withdraw%>
 		</div>
 
-		
-	</div>
 	<hr>
 </div>
 
