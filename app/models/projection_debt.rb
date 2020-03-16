@@ -31,7 +31,7 @@ class ProjectionDebt
 																					transaction_info: transaction_info,																					
 																					date: transaction_info.payment_date(self.start_date) + future_transaction_count.months - 1.month, 
 																					start_balance: balance_projection)
-					byebug if transaction_info.amortization?
+					
 					future_transaction.value = FormulaService.eval(future_transaction)
 					future_transaction.value_brl = future_transaction.value * exchange_rate
 
