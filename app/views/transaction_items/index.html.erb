@@ -9,18 +9,6 @@
 </div>
 
 <div class='pull-left debt-ops'>
-  <p>
-    <strong>Valor do contrato: </strong>
-    <%= big_decimal_to_currency @debt.contract_value %>
-  </p>
-  <p>
-    <strong>Valor do contrato em reais: </strong>
-    <%= number_to_currency @debt.contract_value_brl %>
-  </p>
-  <p>
-    <strong>Saldo devedor total: </strong>
-    <%= big_decimal_to_currency @debt.outstanding_balance %>
-  </p>
   
   <table id="dttb-transaction-items" class="table table-hover">
     <thead>
@@ -80,7 +68,7 @@
 
             <tr class="table-info">
               <td class="td-right" colspan="2"><strong>Saldo em <%= (transaction_item.date + month.month).end_of_month %>:</strong></td>
-              <td class="td-right"><strong><%= big_decimal_to_currency(transaction_item.final_outstanding_balance) if transaction_item.final_outstanding_balance != 0 %></strong></td>
+              <td class="td-right"><strong><%= big_decimal_to_currency(transaction_item.final_outstanding_balance) %></strong></td>
               <td></td>
             </tr>
           <% end %>

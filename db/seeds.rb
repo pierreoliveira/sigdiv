@@ -372,7 +372,7 @@ TransactionItem.create!(
 	value_brl: value * exchange_rate,
 	exchange_rate: exchange_rate,
 	transaction_info: interest,
-	start_balance: BigDecimal('0'),
+	start_balance: BigDecimal('38267.17717'),
 	confirmed: true
 )
 
@@ -1138,7 +1138,7 @@ TransactionItem.create!(
 	value_brl: value * exchange_rate,
 	exchange_rate: exchange_rate,
 	transaction_info: charges_adm,
-	start_balance: BigDecimal('0'),
+	start_balance: BigDecimal('38267.17717'),
 	confirmed: true
 )
 
@@ -1905,7 +1905,7 @@ TransactionItem.create!(
 	value_brl: value * exchange_rate,
 	exchange_rate: exchange_rate,
 	transaction_info: charges_risc,
-	start_balance: BigDecimal('0'),
+	start_balance: BigDecimal('38267.17717'),
 	confirmed: true
 )
 
