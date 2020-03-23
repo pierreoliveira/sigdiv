@@ -1,11 +1,18 @@
 class TransactionSet
-	attr_accessor :transactions
+	attr_accessor :items
 
-	def self.build debt, start_date
-		transaction_items = debt.transaction_items.includes(:transaction_info) + ProjectionDebt.new(debt, start_date).transaction_items
+	def initialize debt, start_date
+		self.items = debt.transaction_items.includes(:transaction_info) + ProjectionDebt.new(debt, start_date).transaction_items
       
-    transaction_items = transaction_items.sort_by { |t| [t.date, t.transaction_info.category_number, t.transaction_info.slug] }
-		transaction_items	
+    self.items = items.sort_by { |i| [i.date, i.transaction_info.category_number, i.transaction_info.slug] }	
 	end
 
+	def balance_by date
+		result = 0
+		items.select { |i| i.date.year == date.year && i.date.month == date.month }.each_with_index do |item, index|
+			result = item.start_balance if index == 0
+			result = item.final_outstanding_balance if item.amortization? || item.withdraw?
+		end
+		result
+	end
 end

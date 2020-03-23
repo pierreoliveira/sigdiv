@@ -2,7 +2,7 @@ class TransactionItemsController < ApplicationController
   before_action :set_transaction, only: [:edit, :update, :destroy]
   before_action :set_debt, only: [:index, :new, :edit, :create, :update]
   before_action :set_start_date, only: [:index, :create, :update]
-  before_action :set_transaction_items, only: [:index, :create, :update]  
+  before_action :set_transaction_set, only: [:index, :create, :update]  
 
   # GET :debt_id/transactions/
   def index    
@@ -61,8 +61,8 @@ class TransactionItemsController < ApplicationController
       @transaction_item = TransactionItem.find(params[:id])
     end
 
-    def set_transaction_items        
-      @transaction_items = TransactionSet.build(@debt, @start_date)
+    def set_transaction_set       
+      @transaction_set = TransactionSet.new(@debt, @start_date)
     end
 
     def set_start_date      

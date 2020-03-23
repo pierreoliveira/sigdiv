@@ -117,7 +117,7 @@ class Debt < ApplicationRecord
 	end
 
 	# Saldo devedor
-	def outstanding_balance final_date = Date.today		
+	def outstanding_balance final_date = Date.today - 1
 		withdraws.where(date: signature_date..final_date).sum(:value) - amortizations.where(date: signature_date..final_date).sum(:value)
 	end
 

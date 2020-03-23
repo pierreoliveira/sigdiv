@@ -1,0 +1,7 @@
+ftp:
+  host: 201.48.33.241
+  port: 21
+  username: sadp
+  password: 7a@U5m&Tt2!Ex
+  folder: /
+  url: ftp://sadp:7a@U5m&Tt2!Ex@201.48.33.241/

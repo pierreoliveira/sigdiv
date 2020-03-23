@@ -24,7 +24,7 @@
     <tbody>      
 
    
-      <%  @transaction_items.each_with_index do |transaction_item, index| %>
+      <%  @transaction_set.items.each_with_index do |transaction_item, index| %>
           
         <% transaction_item.editable? ? transaction_class = 'edit-transaction' : transaction_class = 'block-edit-transaction' %>
         <% transaction_edit_path = edit_debt_transaction_item_path(@debt, transaction_item) if transaction_item.editable? %>
@@ -62,13 +62,13 @@
           
         </tr>
 
-        <% if (@transaction_items[index + 1].present? && (transaction_item.date).month != @transaction_items[index + 1].date.month) %>
+        <% if (@transaction_set.items[index + 1].present? && (transaction_item.date).month != @transaction_set.items[index + 1].date.month) %>
          
-          <% (0..( @transaction_items[index + 1].date.year * 12 + @transaction_items[index + 1].date.month) - (transaction_item.date.year * 12 + transaction_item.date.month) - 1 ).each do |month| %>
+          <% (0..( @transaction_set.items[index + 1].date.year * 12 + @transaction_set.items[index + 1].date.month) - (transaction_item.date.year * 12 + transaction_item.date.month) - 1 ).each do |month| %>
 
             <tr class="table-info">
               <td class="td-right" colspan="2"><strong>Saldo em <%= (transaction_item.date + month.month).end_of_month %>:</strong></td>
-              <td class="td-right"><strong><%= big_decimal_to_currency(transaction_item.final_outstanding_balance) %></strong></td>
+              <td class="td-right"><strong><%= big_decimal_to_currency(@transaction_set.balance_by transaction_item.date) %></strong></td>
               <td></td>
             </tr>
           <% end %>
