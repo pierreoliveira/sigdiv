@@ -62,7 +62,7 @@
           
         </tr>
 
-        <% if (@transaction_set.items[index + 1].present? && (transaction_item.date).month != @transaction_set.items[index + 1].date.month) %>
+        <% if (@transaction_set.items[index + 1].present? && transaction_item.date.month != @transaction_set.items[index + 1].date.month)  || @transaction_set.items.count == index - 1 %>
          
           <% (0..( @transaction_set.items[index + 1].date.year * 12 + @transaction_set.items[index + 1].date.month) - (transaction_item.date.year * 12 + transaction_item.date.month) - 1 ).each do |month| %>
 
@@ -85,8 +85,8 @@
 
 <div class="pull-left transactions-legend">
   <div class='position-fixed'>
-    <button type="button" class="btn btn-primary btn-converte">Converter Moeda</button>
-    <br><br>
+    <!-- <button type="button" class="btn btn-primary btn-converte">Converter Moeda</button>
+    <br><br> -->
     <ul class="nav flex-column list-group">     
       <li><span class="badge badge-primary badge-pill"><%= @debt.transaction_infos.find_by(category_number: 1).slug %></span> Desembolso</li>           
       <li><span class="badge badge-warning badge-pill"><%= @debt.transaction_infos.find_by(category_number: 2).slug %></span> Amortização</li>
@@ -117,23 +117,23 @@
   initTransactionActions();
 
   $('.val_brl').hide();
-  $('.btn-converte').text('Converter para BRL');
+  // $('.btn-converte').text('Converter para BRL');
 
-  if ($('.currency-name').text() == 'BRL'){
-     $('.btn-converte').attr("disabled", true);
-  }else{
-     $('.btn-converte').attr("disabled", false);
-  }
+  // if ($('.currency-name').text() == 'BRL'){
+  //    $('.btn-converte').attr("disabled", true);
+  // }else{
+  //    $('.btn-converte').attr("disabled", false);
+  // }
 
-  $('.btn-converte').on('click', function(e){
-    if( $('.val_moeda').is( ":hidden" ) ) {
-      $('.val_moeda').show();
-      $('.val_brl').hide();
-      $('.btn-converte').text('Converter para BRL');
-    } else if($('.val_brl').is( ":hidden" )){
-      $('.val_brl').show();
-      $('.val_moeda').hide();
-      $('.btn-converte').text('Converter para ' + '<%= @debt.currency.name %>');
-    }
-  })
+  // $('.btn-converte').on('click', function(e){
+  //   if( $('.val_moeda').is( ":hidden" ) ) {
+  //     $('.val_moeda').show();
+  //     $('.val_brl').hide();
+  //     $('.btn-converte').text('Converter para BRL');
+  //   } else if($('.val_brl').is( ":hidden" )){
+  //     $('.val_brl').show();
+  //     $('.val_moeda').hide();
+  //     $('.btn-converte').text('Converter para ' + '<%= @debt.currency.name %>');
+  //   }
+  // })
 </script>
