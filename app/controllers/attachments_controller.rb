@@ -2,6 +2,7 @@ class AttachmentsController < ApplicationController
   before_action :set_attachment, only: [:show, :edit, :update, :destroy]
   before_action :set_debt, only: [:index, :new, :create, :edit, :destroy, :update]
   before_action :set_attachments, only: [:index, :create, :update, :destroy]
+ # before_action :authenticate, only: [:crete, :update, :destroy, :show]
   
   # GET /attachments
   # GET /attachments.json
@@ -12,6 +13,7 @@ class AttachmentsController < ApplicationController
   # GET /attachments/1
   # GET /attachments/1.json
   def show
+    redirect_to @attachment.file.url
   end
 
   # GET /attachments/new
@@ -79,6 +81,12 @@ class AttachmentsController < ApplicationController
 
     def set_debt
       @debt = Debt.find(params[:debt_id])
+    end
+
+    def authenticate
+      authenticate_or_request_with_http_basic do |username, password|
+        username == "sadp" && password == Rails.application.credentials.storage_server_passwd
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

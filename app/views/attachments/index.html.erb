@@ -18,7 +18,7 @@
         <td><%= attachment.name %></td>
         <td><%= attachment.description %></td>
         <td>
-          <%= link_to attachment.file.url, :target => "_blank" do %>
+          <%= link_to debt_attachment_path(@debt, attachment), :target => "_blank" do %>
             <%= attachment.file_identifier %>
             <%= fa_icon('external-link', title: 'Abrir') %>
           <% end %>
