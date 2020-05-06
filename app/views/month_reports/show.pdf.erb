@@ -76,7 +76,7 @@
 							<% @projection_debt.debt.withdraws_values_by_year(@start_date).each do |year_values|%>
 								<tr>
 									<td><%= year_values[0].to_i %></td>
-									<td><%= big_decimal_to_currency(year_values[1]) %></td>
+									<td><%= big_decimal_to_currency_cents(year_values[1]) %></td>
 									<td><%= big_decimal_to_currency_cents(year_values[2]) %></td>
 								</tr>
 								<% sum_values += year_values[1] %>
@@ -84,7 +84,7 @@
 							<% end %>
 								<tr>
 									<td>TOTAL</td>
-									<td><%= big_decimal_to_currency(sum_values) %></td>
+									<td><%= big_decimal_to_currency_cents(sum_values) %></td>
 									<td><%= big_decimal_to_currency_cents(sum_values_brl) %></td>
 								</tr>
 						</tbody>
@@ -256,7 +256,7 @@
 
 					<tr>			
 						<td><%= year %></td>
-						<td><%= big_decimal_to_currency(year_total_principal) %></td>
+						<td><%= big_decimal_to_currency_cents(year_total_principal) %></td>
 						<td><%= big_decimal_to_currency_cents(year_total_principal_brl) %></td>
 						<td><%= big_decimal_to_currency_cents(year_total_interest_brl) %></td>
 						<td><%= big_decimal_to_currency_cents(year_total_charges_brl) %></td>
