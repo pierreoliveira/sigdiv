@@ -35,8 +35,13 @@
       <div class="col-sm">
         <%= f.input :contract_value %>
       </div>
-      <div class="col-sm">
-        <%= f.association :currency %>
+      <div class="row">
+        <div class="col-sm">
+          <%= f.association :currency %>
+        </div>
+        <div class="col-sm">
+          <%= f.input :decimal_places %>
+        </div>
       </div>      
     </div>
 

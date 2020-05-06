@@ -30,6 +30,7 @@ pt-BR:
         contract: Contrato        
         loan_term: Número de parcelas
         interest_rate: Taxa de juros
+        decimal_places: Casas decimais
       creditor:
         name: Nome
         financial_agent: Agente financeiro      

@@ -21,8 +21,7 @@
       </tr>
     </thead>
     
-    <tbody>      
-
+    <tbody>
    
       <%  @transaction_set.items.each_with_index do |transaction_item, index| %>
           
@@ -49,11 +48,11 @@
           </td>
         
           <td class="td-right val_moeda">
-           <%= big_decimal_to_currency(transaction_item.value) || '-'  %>                 
+           <%= big_decimal_to_currency(transaction_item.value, @debt.decimal_places) || '-'  %>                 
           </td>
 
           <td class="td-right val_brl">
-           <%= big_decimal_to_currency_cents(transaction_item.value_brl) || '-'  %>                 
+           <%= big_decimal_to_currency(transaction_item.value_brl, @debt.decimal_places) || '-'  %>                 
           </td>
 
           <td class="td-right">            
@@ -68,7 +67,7 @@
 
             <tr class="table-info">
               <td class="td-right" colspan="2"><strong>Saldo em <%= (transaction_item.date + month.month).end_of_month %>:</strong></td>
-              <td class="td-right"><strong><%= big_decimal_to_currency(@transaction_set.balance_by transaction_item.date) %></strong></td>
+              <td class="td-right"><strong><%= big_decimal_to_currency((@transaction_set.balance_by transaction_item.date), @debt.decimal_places) %></strong></td>
               <td></td>
             </tr>
           <% end %>
