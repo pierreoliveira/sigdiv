@@ -5,7 +5,7 @@ class ProjectionDebt
 	attr_accessor :amortizations_count
 	attr_accessor :transaction_items
 
-	def initialize debt, start_date
+	def initialize debt, start_date = signature_date
 		self.debt = debt
 		self.start_date = start_date
 		self.amortizations_count = start_date_to_amortizations_count
@@ -40,8 +40,7 @@ class ProjectionDebt
 					self.amortizations_count += 1 if transaction_info.amortization?
 				end
 			end
-
-		end
+		end unless interests.empty?
 
 		result
 	end

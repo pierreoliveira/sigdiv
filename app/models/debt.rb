@@ -19,6 +19,7 @@ class Debt < ApplicationRecord
 	validates :amortization_period, presence: true
 	validates :currency, presence: true
 	validates :loan_term, presence: true
+	validates :decimal_places, presence: true
 
 	def self.search code_query = '', name_query = '', creditor_query = '', signature_year_query = '', status_query = ''
 		result = Debt.all
@@ -99,6 +100,10 @@ class Debt < ApplicationRecord
 		end
 	end
 
+	def new_debt?
+		transaction_items.count == 0
+	end
+
 	def in_grace_period?
 		grace_period > Date.today && !finished?
 	end
@@ -169,7 +174,9 @@ class Debt < ApplicationRecord
 	end
 
 	def projection_start_date
-		if in_grace_period? 
+		if new_debt?
+			signature_date
+		elsif in_grace_period?
 			frequency = transaction_infos.find_by(category_number: 3).frequency
 			interests.last.date + TransactionInfo.frequencies[frequency].months
 		elsif in_amortization_period?			
