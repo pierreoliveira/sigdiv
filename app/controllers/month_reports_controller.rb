@@ -8,7 +8,7 @@ class MonthReportsController < ApplicationController
     @future_transactions = @projection_debt.transaction_items 
     
     render pdf: "relatorio_mensal",
-     			 page_size: "A4"    
+     			 page_size: "A4"
   end
 
 end
