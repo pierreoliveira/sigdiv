@@ -5,8 +5,8 @@
     <title>SIGDIV</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     
-    <%= wicked_pdf_stylesheet_link_tag('application', media: 'all', 'data-turbolinks-track' => true) %>
     <meta charset="utf-8" />
   </head>
 
@@ -139,15 +139,15 @@
 			<tbody>
 				<tr>
 					<td>No mês:</td>
-					<td><%= big_decimal_to_currency_cents(@projection_debt.debt.transaction_items_month_total(@start_date, 3)) %></td>					
-					<td><%= big_decimal_to_currency_cents(@projection_debt.debt.transaction_items_month_total @start_date, 2) %></td>
+					<td><%= big_decimal_to_currency_cents(@projection_debt.debt.transaction_items_month_total(@start_date, 2)) %></td>					
+					<td><%= big_decimal_to_currency_cents(@projection_debt.debt.transaction_items_month_total @start_date, 3) %></td>
 					<td><%= big_decimal_to_currency_cents(@projection_debt.debt.transaction_items_month_total @start_date, 4) %></td>
 					<td><%= big_decimal_to_currency_cents(@projection_debt.debt.transaction_items_month_total @start_date) %></td>
 				</tr>
 
 				<tr>
-					<% paid_principal_year_amount =  @projection_debt.debt.transaction_items_year_total @start_date, 3 %>
-					<% paid_interest_year_amount =  @projection_debt.debt.transaction_items_year_total @start_date, 2 %>
+					<% paid_principal_year_amount =  @projection_debt.debt.transaction_items_year_total @start_date, 2 %>
+					<% paid_interest_year_amount =  @projection_debt.debt.transaction_items_year_total @start_date, 3 %>
 					<% paid_charges_year_amount =  @projection_debt.debt.transaction_items_year_total @start_date, 4 %>
 					<% paid_total_year_amount =  @projection_debt.debt.transaction_items_year_total @start_date %>
 
@@ -180,9 +180,9 @@
 					<td></td>
 				</tr>
 
-				<% current_year_lacking_principal = @projection_debt.brl_lacking_total_by @start_date, 3 %>
-				<% current_year_lacking_principal_brl = @projection_debt.brl_lacking_total_by  @start_date, 3 %>
-				<% current_year_lacking_interest_brl = @projection_debt.brl_lacking_total_by @start_date, 2 %>
+				<% current_year_lacking_principal = @projection_debt.brl_lacking_total_by @start_date, 2 %>
+				<% current_year_lacking_principal_brl = @projection_debt.brl_lacking_total_by  @start_date, 2 %>
+				<% current_year_lacking_interest_brl = @projection_debt.brl_lacking_total_by @start_date, 3 %>
 				<% current_year_lacking_charges_brl = @projection_debt.brl_lacking_total_by @start_date, 4 %>
 				<% current_year_lacking = current_year_lacking_principal_brl + current_year_lacking_interest_brl + current_year_lacking_charges_brl %>
 
@@ -247,13 +247,13 @@
 
 		<table class="table table-sm table-bordered text-right">
 			<thead class="thead-light">
-				<tr>
-					<th style="text-align:right;">Ano</th>
-					<th style="text-align:right;">Principal em Moeda Original</th>
-					<th style="text-align:right;">Principal em R$</th>
-					<th style="text-align:right;">Juros em R$</th>
-					<th style="text-align:right;">Outros encargos em R$</th>
-					<th style="text-align:right;">Total</th>
+				<tr class="d-flex">
+					<th class="col-xs-2" style="text-align:right;">Ano</th>
+					<th class="col-xs-2" style="text-align:right;">Principal em Moeda Original</th>
+					<th class="col-xs-2" style="text-align:right;">Principal em R$</th>
+					<th class="col-xs-2" style="text-align:right;">Juros em R$</th>
+					<th class="col-xs-2" style="text-align:right;">Outros encargos em R$</th>
+					<th class="col-xs-2" style="text-align:right;">Total</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -266,19 +266,19 @@
 
 				<% ((@start_date.year + 1)..@projection_debt.last_year).each do |year| %>
 					
-					<% year_total_principal = @projection_debt.brl_total_by year, 3 %>
-					<% year_total_principal_brl = @projection_debt.brl_total_by year, 3 %>
-					<% year_total_interest_brl = @projection_debt.brl_total_by year, 2 %>
+					<% year_total_principal = @projection_debt.brl_total_by year, 2 %>
+					<% year_total_principal_brl = @projection_debt.brl_total_by year, 2 %>
+					<% year_total_interest_brl = @projection_debt.brl_total_by year, 3 %>
 					<% year_total_charges_brl = @projection_debt.brl_total_by year, 4 %>
 					<% year_total = year_total_principal_brl + year_total_interest_brl + year_total_charges_brl %>
 
-					<tr>			
-						<td><%= year %></td>
-						<td><%= big_decimal_to_currency_cents(year_total_principal) %></td>
-						<td><%= big_decimal_to_currency_cents(year_total_principal_brl) %></td>
-						<td><%= big_decimal_to_currency_cents(year_total_interest_brl) %></td>
-						<td><%= big_decimal_to_currency_cents(year_total_charges_brl) %></td>
-						<td><%= big_decimal_to_currency_cents(year_total) %></td>
+					<tr class="d-flex">			
+						<td class="col-xs-2"><%= year %></td>
+						<td class="col-xs-2"><%= big_decimal_to_currency_cents(year_total_principal) %></td>
+						<td class="col-xs-2"><%= big_decimal_to_currency_cents(year_total_principal_brl) %></td>
+						<td class="col-xs-2"><%= big_decimal_to_currency_cents(year_total_interest_brl) %></td>
+						<td class="col-xs-2"><%= big_decimal_to_currency_cents(year_total_charges_brl) %></td>
+						<td class="col-xs-2"><%= big_decimal_to_currency_cents(year_total) %></td>
 					</tr>
 
 					<% total_principal += year_total_principal %>
