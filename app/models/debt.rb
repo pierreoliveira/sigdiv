@@ -181,7 +181,10 @@ class Debt < ApplicationRecord
 			interests.last.date + TransactionInfo.frequencies[frequency].months
 		elsif in_amortization_period?			
 			frequency = transaction_infos.find_by(category_number: 2).frequency
-			amortizations.last.date + TransactionInfo.frequencies[frequency].months 
+			if amortizations.present?
+				amortizations.last.date + TransactionInfo.frequencies[frequency].months 
+			else
+				grace_period
 		else done?
 			false
 		end

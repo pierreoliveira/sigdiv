@@ -2,11 +2,11 @@
   <div class="modal-body">
     <%= f.input :id, as: :hidden %>
     <%= f.input :transaction_info_id, as: :hidden %>
-    <%= f.input :value_brl, as: :string, input_html: {value: f.object.value_brl || '0.00', class: 'currency-brl'} %> 
-    <%= f.input :exchange_rate,  as: :string, input_html: {class: 'currency_exchange_rate'}%>
+    <%= f.input :value_brl, as: :string, placeholder: "Digite o valor", input_html: {value: big_decimal_to_currency(f.object.value_brl, 2) || '', class: 'currency-brl mask_field'} %> 
+    <%= f.input :exchange_rate, placeholder: "Digite o valor",  as: :string, input_html: {class: 'currency_exchange_rate'}%>
     <div class="row">
       <div class="col-6">
-        <%= f.input :value , as: :string, input_html: {class: 'currency'} %>
+        <%= f.input :value, placeholder: "Digite o valor", as: :string, input_html: {value: big_decimal_to_currency(f.object.value, 6),class: 'currency mask_field'} %>
       </div>
       <div class="col-6">
         <%= f.input :formula %>
@@ -33,16 +33,23 @@
 </div>
 
 <script type="text/javascript">
- 
-  $('#transaction_item_exchange_rate').on('keyup', function(e) {
+  $('.currency-brl').unmask();
+  $('.currency').unmask();
 
-    if($.isNumeric($('#transaction_item_exchange_rate').val())){
-      $('#transaction_item_value').val((Big($('#transaction_item_value_brl').val().replace(/[.]/g, '').replace(/[,]/g, '.')) / $('#transaction_item_exchange_rate').val().replace(/[,]/g, '.')).toFixed(5));
-
-      $('.currency').unmask();
-      $('.currency').mask('#.##0,00000', {reverse: true});
-    }
+  $('#transaction_item_exchange_rate').on('keyup', function(e) {    
+    updateValue();    
   });
+
+  $('.mask_field').on('keyup', function(e) {    
+    $('.currency-brl').mask('#.##0,00', {reverse: true});
+    $('.currency').mask('#.##0,00000', {reverse: true});
+  });
+
+  function updateValue(){
+    if($.isNumeric($('#transaction_item_exchange_rate').val())){
+      $('#transaction_item_value').val((Big($('#transaction_item_value_brl').val().replace(/[.]/g, '').replace(/[,]/g, '.')) * $('#transaction_item_exchange_rate').val().replace(/[,]/g, '.')).toFixed(5));
+    }
+  };
 
 </script>
 
