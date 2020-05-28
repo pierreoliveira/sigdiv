@@ -24,7 +24,8 @@ Debt.create!( "code" => 123456,
 					    "category" => 0,
 					    "currency_id" => currency1.id,
 					    "interest_rate" => 0.005,
-					    "loan_term" => 240
+					    "loan_term" => 240,
+					    "decimal_places" => 5 
 					    )
 
 Debt.create!( code: 123789, 
@@ -43,7 +44,8 @@ Debt.create!( code: 123789,
 							category: 1, 
 							currency_id: currency2.id, 
 							loan_term: 16, 
-							interest_rate: 1.95)
+							interest_rate: 1.95,
+							"decimal_places" => 2)
 #Charge.create!(name: 'Taxa administrativa', base: 2, debt: Debt.first, count_days: true)
 #Charge.create!(name: 'Taxa de risco de crédito', base: 0.7, debt: Debt.first, count_days: false)
 

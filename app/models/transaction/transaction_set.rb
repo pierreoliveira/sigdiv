@@ -11,7 +11,7 @@ class TransactionSet
 		result = 0
 		items.select { |i| i.date.year == date.year && i.date.month == date.month }.each_with_index do |item, index|
 			result = item.start_balance if index == 0
-			result = item.final_outstanding_balance if item.amortization? || item.withdraw?
+			result = Dentaku("#{result} #{item.transaction_info.category.operation} #{item.value}") if item.amortization? || item.withdraw?
 		end
 		result
 	end

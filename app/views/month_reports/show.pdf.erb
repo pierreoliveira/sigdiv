@@ -56,7 +56,7 @@
 					<div class="alert alert-primary text-left">
 					  <strong>
 						  Fator de Conversão em <%= Date.new(2019, 2).end_of_month %>:	  
-						  21,76552574
+						  <%= @projection_debt.transactions.last.exchange_rate %>
 						</strong>
 					</div>
 				</td>
@@ -312,6 +312,7 @@
 		</table>
 
 		<h6><strong>D - Observações</strong></h6>
+		<p><%= @projection_debt.notes %></p>
 		<hr>
 		<div class="card">
 		  <div class="card-body">        
