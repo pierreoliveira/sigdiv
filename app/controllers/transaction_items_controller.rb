@@ -2,7 +2,7 @@ class TransactionItemsController < ApplicationController
   before_action :set_transaction, only: [:edit, :update, :destroy]
   before_action :set_debt, only: [:index, :new, :edit, :create, :update]
   before_action :set_start_date, only: [:index, :create, :update]
-  before_action :set_transaction_set, only: [:index, :create, :update]  
+  before_action :set_transaction_set, only: [:index]  
 
   # GET :debt_id/transactions/
   def index    
@@ -26,6 +26,7 @@ class TransactionItemsController < ApplicationController
     @transaction_item = TransactionItem.new(transaction_item_params)
     
     if @transaction_item.save
+      set_transaction_set
       render :index, layout: false, notice: 'O registro foi salvo com sucesso.'        
     else
       render :new, layout: false, status: :unprocessable_entity
@@ -35,6 +36,7 @@ class TransactionItemsController < ApplicationController
   # PATCH/PUT :debt_id/transactions/1
   def update
     if @transaction_item.update(transaction_item_params)
+      set_transaction_set
       render :index, layout: false, notice: 'O registro foi salvo com sucesso.'        
     else
       render :edit, layout: false, status: :unprocessable_entity        
