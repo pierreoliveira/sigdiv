@@ -58,7 +58,7 @@ charges_risc = TransactionInfo.create!(category_number: 4, debt: Debt.first, pay
 withdraw_caf = TransactionInfo.create!(category_number: 1, debt: Debt.last, payment_day:'30', formula: "", slug: 'D')
 amortization_caf = TransactionInfo.create!(category_number: 2, debt: Debt.last, payment_day:'30', formula: "[SALDO] / ([PARCELAS] - [N_PARCELA])", slug: 'A', frequency: 6)
 interest_caf = TransactionInfo.create!(category_number: 3, debt: Debt.last, payment_day:'30', formula: "[SALDO] * ((1.95 / 100 / 360) * [DELTA_DATA])", slug: 'J', frequency: 6)
-charges_cc_caf = TransactionInfo.create!(category_number: 4, debt: Debt.last, payment_day:'30', base: 0.35, description:'Comissão de crédito', formula: "([VALOR_CONTRATO] - [SALDO]) * ((0.35 / 100 / 360) * [DELTA_DATA])", slug: 'CC', frequency: 6)
+charges_cc_caf = TransactionInfo.create!(category_number: 4, debt: Debt.last, payment_day:'30', base: 0.35, description:'Comissão de crédito', formula: "([VALOR_CONTRATO] - [SALDO]) * ((0.35 / 100 / 360) * [DELTA_DATA])", slug: 'CC', frequency: 6, bind_withdraw: true)
 
 puts Date.new(2015, 5, 8)
 

@@ -16,8 +16,10 @@ class TransactionInfo < ApplicationRecord
 		BASIC_TYPES[category_number][:name]
 	end
 
-	def payment_date date = Date.today
-		Date.new(date.year, date.month, payment_day)
+	def payment_date date = Date.today		
+		end_of_month = Date.new(date.year, date.month).end_of_month
+		payment_day <= end_of_month.day ? day = payment_day : day = end_of_month.day
+		Date.new(date.year, date.month, day)
 	end
 
 	def reference_period

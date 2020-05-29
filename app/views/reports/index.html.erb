@@ -13,7 +13,7 @@
     <tbody>
       <tr>
         <td>Mensal</td>
-        <td><%= select_tag 'debt', options_for_select(Debt.all.collect { |debt| [debt.name, debt.id] } ), class: 'form-control select month-report-param month_report_debt', prompt: 'Contrato:' %></td>
+        <td><%= select_tag 'debt', options_for_select(Debt.all.order(:name).collect { |debt| [debt.name, debt.id] } ), class: 'form-control select month-report-param month_report_debt', prompt: 'Contrato:' %></td>
         <td>
         	<%= select_tag 'month_report_month', options_for_select(01..12), class: 'form-control select month-report-param month_report_month', prompt: 'Mês' %>
         	<%= select_tag 'month_report_year', options_for_select(Debt.first.signature_date.year..Date.today.year), class: 'form-control select month-report-param month_report_year', prompt: 'Ano:' %>        	

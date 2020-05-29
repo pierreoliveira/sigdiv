@@ -137,7 +137,7 @@ class Debt < ApplicationRecord
 		end
 	end
 
-	def withdraws_values_by_year end_date
+	def withdraws_values_by_year end_date		
 		withdraws.where('date <= ?', end_date).order('extract(year from date)').group('extract(year from date)').pluck("extract(year from date), sum(value), sum(value_brl)")
 	end
 
@@ -147,14 +147,18 @@ class Debt < ApplicationRecord
 		result = result.sum(:value_brl)
 	end
 
-	def transaction_items_year_total date, category_number = nil
+	def transaction_items_year_total date, category_number = nil		
 		result = transaction_items.where(date: date.beginning_of_year..date.end_of_month)
 		result = result.where(transaction_infos: { category_number: category_number }) if category_number.present? && category_number != 1
-		result = result.sum(:value_brl)
+		result = result.reject(&:withdraw?).sum(&:value_brl)
 	end
 
 	def last_year
 		(grace_period + loan_term.months).year
+	end
+
+	def last_exchange_rate end_date		
+		transaction_items.where('date < ?', end_date).reject(&:withdraw?).sort_by(&:date).last.try(:exchange_rate)
 	end
 
 	def amortizations_count

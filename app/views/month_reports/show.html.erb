@@ -55,8 +55,9 @@
 		    <td style="width:50%;">
 					<div class="alert alert-primary text-left">
 					  <strong>
-						  Fator de Conversão em <%= Date.new(2019, 2).end_of_month %>:	  
-						  <%= @projection_debt.transaction_items.last.exchange_rate %>
+						  Fator de Conversão em <%= @start_date.end_of_month %>:						  
+						  <% last_rate = @projection_debt.debt.last_exchange_rate(@start_date) %>
+						  <%= last_rate.present? ? last_rate : "-" %>
 						</strong>
 					</div>
 				</td>

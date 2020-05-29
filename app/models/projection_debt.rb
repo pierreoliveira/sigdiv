@@ -53,8 +53,8 @@ class ProjectionDebt
 		end
 	end
 
-	def brl_lacking_total_by date, category_number
-		self.transaction_items.reduce(0){ |sum, transaction| transaction.date.year == date.year && transaction.date > (date + 1.month) && transaction.transaction_info.category_number == category_number ? sum + transaction.value_brl : sum }
+	def brl_lacking_total_by date, category_number		
+		self.transaction_items.reduce(0){ |sum, transaction| transaction.date.year == date.year && transaction.date > date && transaction.transaction_info.category_number == category_number ? sum + transaction.value_brl : sum }
 	end
 
 	def brl_total_by year, category_number
