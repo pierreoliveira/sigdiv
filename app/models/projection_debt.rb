@@ -40,7 +40,7 @@ class ProjectionDebt
 					self.amortizations_count += 1 if transaction_info.amortization?
 				end
 			end
-		end unless interests.empty?
+		end unless withdraws.empty?
 
 		result
 	end
@@ -65,7 +65,7 @@ class ProjectionDebt
 		if debt.in_grace_period? 
 			self.start_date.present? ? 1..grace_period_in_months(self.start_date) : 0..0
 		elsif debt.in_amortization_period?
-			1..(debt.loan_term - debt.paid_payments_count(:amortizations, self.start_date))
+			1..((debt.loan_term - debt.paid_payments_count(:amortizations, self.start_date)) * 6) 
 		else debt.done?
 			0..0
 		end		

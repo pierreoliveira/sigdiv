@@ -7,12 +7,14 @@ Debt.destroy_all
 creditor1 = Creditor.create!(name: 'CAIXA ECONÔMICA FEDERAL', financial_agent: true)
 creditor2 = Creditor.create!(name: 'Corporação Andina de Fomento - CAF', financial_agent: false)
 creditor3 = Creditor.create!(name: 'BNDES', financial_agent: true)
+creditor4 = Creditor.create!(name: 'BANCO DO BRASIL', financial_agent: true)
+creditor5 = Creditor.create!(name: 'BID', financial_agent: false)
 
 currency1 = Currency.create!(name: 'BRL', formula: '1')
 currency2 = Currency.create!(name: 'USD', formula: '[BACEN1]')
 currency3 = Currency.create!(name: 'URTJLP', formula: '[BNDES314]')
 
-Debt.create!( "code" => 123456,
+cef = Debt.create!( "code" => 123456,
 					    "contract_value" => 292320000,
 					    "signature_date" => Date.parse('19/11/2013'),
 					    "creditor_id" => creditor1.id,
@@ -28,7 +30,7 @@ Debt.create!( "code" => 123456,
 					    "decimal_places" => 5 
 					    )
 
-Debt.create!( code: 123789, 
+caf = Debt.create!( code: 123789, 
 							contract_value: 0.1e9, 
 							signature_date: "2016-11-30", 
 							creditor_id: creditor2.id, 
@@ -46,19 +48,44 @@ Debt.create!( code: 123789,
 							loan_term: 16, 
 							interest_rate: 1.95,
 							"decimal_places" => 2)
-#Charge.create!(name: 'Taxa administrativa', base: 2, debt: Debt.first, count_days: true)
-#Charge.create!(name: 'Taxa de risco de crédito', base: 0.7, debt: Debt.first, count_days: false)
 
-withdraw = TransactionInfo.create!(category_number: 1, debt: Debt.first, payment_day:'15', formula: "", slug: 'D')
-amortization = TransactionInfo.create!(category_number: 2, debt: Debt.first, payment_day:'15', formula: "[PGTO] - [SALDO] * [JUROS]", slug: 'A', frequency: 1)
-interest = TransactionInfo.create!(category_number: 3, debt: Debt.first, payment_day:'15', formula: "[SALDO] * [JUROS]", slug: 'J', frequency: 1)
-charges_adm = TransactionInfo.create!(category_number: 4, debt: Debt.first, payment_day:'15', base: 2, description:'Taxa Adm', formula: "[SALDO] * (0.02 / 12)", slug: 'TA', frequency: 1)
-charges_risc = TransactionInfo.create!(category_number: 4, debt: Debt.first, payment_day:'15', base: 0.7, description:'Taxa Risco', formula: "[SALDO] * (0.007 / 12)", slug: 'TR', frequency: 1)
+bid = Debt.create!( code: 123799, 
+							contract_value: 26470000, 
+							signature_date: "2016-11-30", 
+							creditor_id: creditor5.id, 
+							grace_period: "2019-04-15", 
+							amortization_period: "2038-10-15", 
+							purpose: "ProCidades - Programa de Desenvolvimento Urbano e Inclusão Social de Niterói",							
+							amortization_type: 0,
+							financial_agent_id: creditor4.id,
+							applicable_legislation: "",
+							legislation_level: nil,
+							name: "BID", 
+							notes: "", 
+							category: 1, 
+							currency_id: currency2.id, 
+							loan_term: 40, 
+							interest_rate: 2.75,
+							"decimal_places" => 2)
 
-withdraw_caf = TransactionInfo.create!(category_number: 1, debt: Debt.last, payment_day:'30', formula: "", slug: 'D')
-amortization_caf = TransactionInfo.create!(category_number: 2, debt: Debt.last, payment_day:'30', formula: "[SALDO] / ([PARCELAS] - [N_PARCELA])", slug: 'A', frequency: 6)
-interest_caf = TransactionInfo.create!(category_number: 3, debt: Debt.last, payment_day:'30', formula: "[SALDO] * ((1.95 / 100 / 360) * [DELTA_DATA])", slug: 'J', frequency: 6)
-charges_cc_caf = TransactionInfo.create!(category_number: 4, debt: Debt.last, payment_day:'30', base: 0.35, description:'Comissão de crédito', formula: "([VALOR_CONTRATO] - [SALDO]) * ((0.35 / 100 / 360) * [DELTA_DATA])", slug: 'CC', frequency: 6, bind_withdraw: true)
+#Charge.create!(name: 'Taxa administrativa', base: 2, debt: cef, count_days: true)
+#Charge.create!(name: 'Taxa de risco de crédito', base: 0.7, debt: cef, count_days: false)
+
+withdraw = TransactionInfo.create!(category_number: 1, debt: cef, payment_day:'15', formula: "", slug: 'D')
+amortization = TransactionInfo.create!(category_number: 2, debt: cef, payment_day:'15', formula: "[PGTO] - [SALDO] * [JUROS]", slug: 'A', frequency: 1)
+interest = TransactionInfo.create!(category_number: 3, debt: cef, payment_day:'15', formula: "[SALDO] * [JUROS]", slug: 'J', frequency: 1)
+charges_adm = TransactionInfo.create!(category_number: 4, debt: cef, payment_day:'15', base: 2, description:'Taxa Adm', formula: "[SALDO] * (0.02 / 12)", slug: 'TA', frequency: 1)
+charges_risc = TransactionInfo.create!(category_number: 4, debt: cef, payment_day:'15', base: 0.7, description:'Taxa Risco', formula: "[SALDO] * (0.007 / 12)", slug: 'TR', frequency: 1)
+
+withdraw_caf = TransactionInfo.create!(category_number: 1, debt: caf, payment_day:'30', formula: "", slug: 'D')
+amortization_caf = TransactionInfo.create!(category_number: 2, debt: caf, payment_day:'30', formula: "[SALDO] / ([PARCELAS] - [N_PARCELA])", slug: 'A', frequency: 6)
+interest_caf = TransactionInfo.create!(category_number: 3, debt: caf, payment_day:'30', formula: "[SALDO] * ((1.95 / 100 / 360) * [DELTA_DATA])", slug: 'J', frequency: 6)
+charges_cc_caf = TransactionInfo.create!(category_number: 4, debt: caf, payment_day:'30', base: 0.35, description:'Comissão de crédito', formula: "([VALOR_CONTRATO] - [SALDO]) * ((0.35 / 100 / 360) * [DELTA_DATA])", slug: 'CC', frequency: 6, bind_withdraw: true)
+
+withdraw_bid = TransactionInfo.create!(category_number: 1, debt: bid, payment_day:'15', formula: "", slug: 'D')
+amortization_bid = TransactionInfo.create!(category_number: 2, debt: bid, payment_day:'15', formula: "[SALDO] / ([PARCELAS] - [N_PARCELA])", slug: 'A', frequency: 6)
+interest_bid = TransactionInfo.create!(category_number: 3, debt: bid, payment_day:'15', formula: "[SALDO] * ((1.95 / 100 / 360) * [DELTA_DATA])", slug: 'J', frequency: 6)
+charges_bid = TransactionInfo.create!(category_number: 4, debt: bid, payment_day:'15', base: 0.35, description:'Comissão de crédito', formula: "([VALOR_CONTRATO] - [SALDO]) * ((0.35 / 100 / 360) * [DELTA_DATA])", slug: 'CC', frequency: 6, bind_withdraw: true)
 
 puts Date.new(2015, 5, 8)
 
@@ -3214,4 +3241,337 @@ TransactionItem.create!(
 	transaction_info: charges_cc_caf,
 	start_balance: BigDecimal('39939373.97'),
 	confirmed: true
+)
+
+#BID
+value = BigDecimal('12030000')
+exchange_rate = BigDecimal('0.400112931')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2014, 11, 14),
+	value_brl: BigDecimal('3006657.90'),
+	exchange_rate: exchange_rate,
+	transaction_info: withdraw_bid,
+	start_balance: BigDecimal('0'),
+	confirmed: true
+)
+
+value = BigDecimal('9943227.53')
+exchange_rate = BigDecimal('0.2898550720')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 05, 31),
+	value_brl: BigDecimal('34304134.98'),
+	exchange_rate: exchange_rate,
+	transaction_info: withdraw_bid,
+	start_balance: BigDecimal('1203000.00'),
+	confirmed: true
+)
+
+value = BigDecimal('7591386.98')
+exchange_rate = BigDecimal('0.3124511795')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2017, 12, 22),
+	value_brl: BigDecimal('24296234.03'),
+	internalization_date: Date.new(2018,1,19),
+	exchange_rate: exchange_rate,
+	transaction_info: withdraw_bid,
+	start_balance: BigDecimal('11146227.53'),
+	confirmed: true
+)
+
+value = BigDecimal('5051688.40')
+exchange_rate = BigDecimal('0.260960334')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2019, 6, 21),
+	internalization_date: Date.new(2019,6,26),
+	value_brl: BigDecimal('3006657.90'),
+	exchange_rate: exchange_rate,
+	transaction_info: withdraw_bid,
+	start_balance: BigDecimal('23320862.55'),
+	confirmed: true
+)
+
+value = BigDecimal('5713.75')
+value_brl = BigDecimal('17426.92')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2015, 4, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: interest_bid,
+	start_balance: BigDecimal('1203000.00')
+)
+
+value = BigDecimal('7165.93')
+value_brl = BigDecimal('28240.93')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2015, 10, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: interest_bid,
+	start_balance: BigDecimal('1203000.00')
+)
+
+value = BigDecimal('11414.32')
+value_brl = BigDecimal('40264.01')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 4, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: interest_bid,
+	start_balance: BigDecimal('1203000.00')
+)
+
+value = BigDecimal('82242.95')
+value_brl = BigDecimal('260874.64')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 10, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: interest_bid,
+	start_balance: BigDecimal('11146227.53')
+)
+
+value = BigDecimal('114972.74')
+value_brl = BigDecimal('356530.47')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2017, 4, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: interest_bid,
+	start_balance: BigDecimal('11146227.53')
+)
+
+value = BigDecimal('122525.90')
+value_brl = BigDecimal('390122.47')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2017, 10, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: interest_bid,
+	start_balance: BigDecimal('11146227.53')
+)
+
+value = BigDecimal('202229.90')
+value_brl = BigDecimal('686853.63')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2018, 4, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: interest_bid,
+	start_balance: BigDecimal('18737614.51')
+)
+
+value = BigDecimal('309632.66')
+value_brl = BigDecimal('1164373.62')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2018, 10, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: interest_bid,
+	start_balance: BigDecimal('18737614.51')
+)
+
+value = BigDecimal('341394.19')
+value_brl = BigDecimal('1316928.09')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2019, 4, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: interest_bid,
+	start_balance: BigDecimal('18737614.51')
+)
+
+value = BigDecimal('358098.87')
+value_brl = BigDecimal('1466056.77')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2019, 10, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: interest_bid,
+	start_balance: BigDecimal('23320862.55')
+)
+
+#BID-ENCARGO
+
+value = BigDecimal('30639.93')
+value_brl = BigDecimal('74455.03')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2014, 10, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: charges_bid,
+	start_balance: BigDecimal('0')
+)
+
+value = BigDecimal('31772.41')
+value_brl = BigDecimal('96905.85')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2015, 4, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: charges_bid,
+	start_balance: BigDecimal('1203000.00')
+)
+
+value = BigDecimal('31670.28')
+value_brl = BigDecimal('124812.57')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2015, 10, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: charges_bid,
+	start_balance: BigDecimal('1203000.00')
+)
+
+value = BigDecimal('81585.81')
+value_brl = BigDecimal('287793.94')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 4, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: charges_bid,
+	start_balance: BigDecimal('1203000.00')
+)
+
+value = BigDecimal('44557.91')
+value_brl = BigDecimal('141337.69')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 10, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: charges_bid,
+	start_balance: BigDecimal('11146227.53')
+)
+
+value = BigDecimal('38159.74')
+value_brl = BigDecimal('118333.35')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2017, 4, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: charges_bid,
+	start_balance: BigDecimal('11146227.53')
+)
+
+value = BigDecimal('38414.39')
+value_brl = BigDecimal('122311.42')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2017, 10, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: charges_bid,
+	start_balance: BigDecimal('11146227.53')
+)
+
+value = BigDecimal('26349.43')
+value_brl = BigDecimal('89493.20')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2018, 4, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: charges_bid,
+	start_balance: BigDecimal('18737614.51')
+)
+
+value = BigDecimal('19383.93')
+value_brl = BigDecimal('72893.27')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2018, 10, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: charges_bid,
+	start_balance: BigDecimal('18737614.51')
+)
+
+value = BigDecimal('19278.00')
+value_brl = BigDecimal('74364.89')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2019, 4, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: charges_bid,
+	start_balance: BigDecimal('18737614.51')
+)
+
+value = BigDecimal('11356.59')
+value_brl = BigDecimal('46493.88')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2019, 10, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: charges_bid,
+	start_balance: BigDecimal('23320862.55')
+)
+
+value = BigDecimal('468440.36')
+value_brl = BigDecimal('1807008.69')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2019, 4, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: amortization_bid,
+	start_balance: BigDecimal('18737614.51')
+)
+
+value = BigDecimal('597970.87')
+value_brl = BigDecimal('2448092.74')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2019, 10, 15),
+	value_brl: value_brl,
+	exchange_rate: value / value_brl,
+	transaction_info: amortization_bid,
+	start_balance: BigDecimal('23320862.55')
 )
