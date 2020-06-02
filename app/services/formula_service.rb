@@ -11,7 +11,7 @@ class FormulaService
 	
 	class << self
 		
-		def eval transaction
+		def eval transaction			
 			Dentaku(parse(transaction))
 		end
 
@@ -20,7 +20,9 @@ class FormulaService
 				transaction.transaction_info.formula.gsub!(/\[SOMA\(.*\)\]/, summation(transaction.transaction_info.formula.match(/\[SOMA\((.*)\)\]/).captures.first, transaction.debt).to_s)
 			end
 			
-			result = transaction.transaction_info.formula.dup			
+			result = transaction.transaction_info.formula.dup
+			result.gsub!(",", '.')
+			
 			transaction.transaction_info.formula.gsub(/\[(\w*)\]/) do	
 				
 				klass = VARIABLES[$1].first				

@@ -68,6 +68,44 @@ bid = Debt.create!( code: 123799,
 							interest_rate: 2.75,
 							"decimal_places" => 2)
 
+bnds_sub_a = Debt.create!( code: 212345, 
+							contract_value:  6242000, 
+							signature_date: "2014-12-22", 
+							creditor_id: creditor3.id, 
+							grace_period: "2017-02-15", 
+							amortization_period: "2023-11-15",
+							purpose: "Programa de Modernização da Administração Tributária e da Gestão dos Setores Sociais Básicos - PMAT",							
+							amortization_type: 0,
+							financial_agent_id: creditor3.id,
+							applicable_legislation: "",
+							legislation_level: nil,
+							name: "PMAT  - BNDES - SubC. A",
+							notes: "", 
+							category: 0,
+							currency_id: currency1.id, 
+							loan_term: 72, 
+							interest_rate: 2.20,
+							"decimal_places" => 4)
+
+bnds_sub_b = Debt.create!( code: 212346, 
+							contract_value:  21847000, 
+							signature_date: "2014-12-22", 
+							creditor_id: creditor3.id, 
+							grace_period: "2017-02-15", 
+							amortization_period: "2023-11-15",
+							purpose: "Programa de Modernização da Administração Tributária e da Gestão dos Setores Sociais Básicos - PMAT",							
+							amortization_type: 0,
+							financial_agent_id: creditor3.id,
+							applicable_legislation: "",
+							legislation_level: nil,
+							name: "PMAT  - BNDES - SubC. B",
+							notes: "", 
+							category: 0,
+							currency_id: currency1.id, 
+							loan_term: 72, 
+							interest_rate: 2.20,
+							"decimal_places" => 6)
+
 #Charge.create!(name: 'Taxa administrativa', base: 2, debt: cef, count_days: true)
 #Charge.create!(name: 'Taxa de risco de crédito', base: 0.7, debt: cef, count_days: false)
 
@@ -86,6 +124,15 @@ withdraw_bid = TransactionInfo.create!(category_number: 1, debt: bid, payment_da
 amortization_bid = TransactionInfo.create!(category_number: 2, debt: bid, payment_day:'15', formula: "[SALDO] / ([PARCELAS] - [N_PARCELA])", slug: 'A', frequency: 6)
 interest_bid = TransactionInfo.create!(category_number: 3, debt: bid, payment_day:'15', formula: "[SALDO] * ((1.95 / 100 / 360) * [DELTA_DATA])", slug: 'J', frequency: 6)
 charges_bid = TransactionInfo.create!(category_number: 4, debt: bid, payment_day:'15', base: 0.35, description:'Comissão de crédito', formula: "([VALOR_CONTRATO] - [SALDO]) * ((0.35 / 100 / 360) * [DELTA_DATA])", slug: 'CC', frequency: 6, bind_withdraw: true)
+
+withdraw_bnds_sub_a = TransactionInfo.create!(category_number: 1, debt: bnds_sub_a, payment_day:'15', formula: "", slug: 'D')
+amortization_bnds_sub_a = TransactionInfo.create!(category_number: 2, debt: bnds_sub_a, payment_day:'15', formula: "[SALDO] / ([PARCELAS] - [N_PARCELA])", slug: 'A', frequency: 1)
+interest_bnds_sub_a = TransactionInfo.create!(category_number: 3, debt: bnds_sub_a, payment_day:'15', formula: "[SALDO] * ((1.95 / 100 / 360) * [DELTA_DATA])", slug: 'J', frequency: 1)
+
+withdraw_bnds_sub_b = TransactionInfo.create!(category_number: 1, debt: bnds_sub_b, payment_day:'15', formula: "", slug: 'D')
+amortization_bnds_sub_b = TransactionInfo.create!(category_number: 2, debt: bnds_sub_b, payment_day:'15', formula: "[SALDO] / ([PARCELAS] - [N_PARCELA])", slug: 'A', frequency: 1)
+interest_bnds_sub_b = TransactionInfo.create!(category_number: 3, debt: bnds_sub_b, payment_day:'15', formula: "[SALDO] * ((1.95 / 100 / 360) * [DELTA_DATA])", slug: 'J', frequency: 1)
+
 
 puts Date.new(2015, 5, 8)
 
@@ -3574,4 +3621,425 @@ TransactionItem.create!(
 	exchange_rate: value / value_brl,
 	transaction_info: amortization_bid,
 	start_balance: BigDecimal('23320862.55')
+)
+
+#BNDES
+
+value = BigDecimal('125371.278')
+value_brl = BigDecimal('175000')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2015, 01, 29),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal('1.3958540'),
+	transaction_info: withdraw_bnds_sub_a,
+	start_balance: BigDecimal('0'),
+	confirmed: true
+)
+
+value = BigDecimal('206385.6910')
+value_brl = BigDecimal('290189.22')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2015, 02, 24),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal('1.4060530'),
+	transaction_info: withdraw_bnds_sub_a,
+	start_balance: BigDecimal('125371.278'),
+	confirmed: true
+)
+
+value = BigDecimal('624784.5539')
+value_brl = BigDecimal('896391.52')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2015, 04, 28),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal('1.4347210'),
+	transaction_info: withdraw_bnds_sub_a,
+	start_balance: BigDecimal('331756.96900'),
+	confirmed: true
+)
+
+value = BigDecimal('522952.5584')
+value_brl = BigDecimal('799858.03')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2015, 10, 26),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal('1.5295040'),
+	transaction_info: withdraw_bnds_sub_a,
+	start_balance: BigDecimal('956541.52290'),
+	confirmed: true
+)
+
+value = BigDecimal('858739.6504')
+value_brl = BigDecimal('1371244.92')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 02, 24),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal('1.5968110'),
+	transaction_info: withdraw_bnds_sub_a,
+	start_balance: BigDecimal('1479494.08130'),
+	confirmed: true
+)
+
+value = BigDecimal('548930.0373')
+value_brl = BigDecimal('884398.20')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 03, 18),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal('1.6111310'),
+	transaction_info: withdraw_bnds_sub_a,
+	start_balance: BigDecimal('2338233.73170'),
+	confirmed: true
+)
+
+value = BigDecimal('1094681.3614')
+value_brl = BigDecimal('1824918.12')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 6, 22),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal('1.6670770'),
+	transaction_info: withdraw_bnds_sub_a,
+	start_balance: BigDecimal('2887163.76900'),
+	confirmed: true
+)
+
+#Sub A interests
+
+value = BigDecimal('1178.1416')
+value_brl = BigDecimal('')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2015, 4, 15),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal(''),
+	transaction_info: interest_bnds_sub_a,
+	start_balance: BigDecimal('331756.96900')
+)
+
+value = BigDecimal('4701.1907')
+value_brl = BigDecimal('')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2015, 7, 15),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal(''),
+	transaction_info: interest_bnds_sub_a,
+	start_balance: BigDecimal('956541.52290')
+)
+
+value = BigDecimal('5301.1531')
+value_brl = BigDecimal('')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2015, 10, 15),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal(''),
+	transaction_info: interest_bnds_sub_a,
+	start_balance: BigDecimal('956541.52290')
+)
+
+value = BigDecimal('7754.1005')
+value_brl = BigDecimal('')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 1, 15),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal(''),
+	transaction_info: interest_bnds_sub_a,
+	start_balance: BigDecimal('1479494.08130')
+)
+
+value = BigDecimal('11517.4879')
+value_brl = BigDecimal('')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 4, 15),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal(''),
+	transaction_info: interest_bnds_sub_a,
+	start_balance: BigDecimal('2887163.76900')
+)
+
+value = BigDecimal('17357.1224')
+value_brl = BigDecimal('')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 7, 15),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal(''),
+	transaction_info: interest_bnds_sub_a,
+	start_balance: BigDecimal('3981845.13040')
+)
+
+value = BigDecimal('22067.3857')
+value_brl = BigDecimal('')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 10, 15),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal(''),
+	transaction_info: interest_bnds_sub_a,
+	start_balance: BigDecimal('3981845.13040')
+)
+
+value = BigDecimal('21720.9652')
+value_brl = BigDecimal('')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2017, 1, 15),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal(''),
+	transaction_info: interest_bnds_sub_a,
+	start_balance: BigDecimal('3981845.13040')
+)
+
+#Sub B
+
+value = BigDecimal('265946.66880')
+value_brl = BigDecimal('525000')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2015, 01, 29),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal('1,97408'),
+	transaction_info: withdraw_bnds_sub_b,
+	start_balance: BigDecimal('0'),
+	confirmed: true
+)
+
+value = BigDecimal('440999.18440')
+value_brl = BigDecimal('870567.67')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2015, 02, 24),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal('1.97408'),
+	transaction_info: withdraw_bnds_sub_b,
+	start_balance: BigDecimal('265946.6688'),
+	confirmed: true
+)
+
+value = BigDecimal('1362241.92780')
+value_brl = BigDecimal('2689174.54')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2015, 04, 28),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal('1.97408'),
+	transaction_info: withdraw_bnds_sub_b,
+	start_balance: BigDecimal('706945.8532'),
+	confirmed: true
+)
+
+value = BigDecimal('1100315.45090')
+value_brl = BigDecimal('2176173.09')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2015, 10, 26),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal('1.97777'),
+	transaction_info: withdraw_bnds_sub_b,
+	start_balance: BigDecimal('2069187.7810'),
+	confirmed: true
+)
+
+value = BigDecimal('2071978.31780')
+value_brl = BigDecimal('4113734.76')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 02, 24),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal('1.98541'),
+	transaction_info: withdraw_bnds_sub_b,
+	start_balance: BigDecimal('3169503.2319'),
+	confirmed: true
+)
+
+value = BigDecimal('1335137.51200')
+value_brl = BigDecimal('2653194.61')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 03, 18),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal('1.98721'),
+	transaction_info: withdraw_bnds_sub_b,
+	start_balance: BigDecimal('5241481.5497'),
+	confirmed: true
+)
+
+value = BigDecimal('419254.50250')
+value_brl = BigDecimal('836284.86')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 6, 22),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal('1.99470'),
+	transaction_info: withdraw_bnds_sub_b,
+	start_balance: BigDecimal('6576619.0617'),
+	confirmed: true
+)
+
+value = BigDecimal('1374526.12470')
+value_brl = BigDecimal('2752052.84')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 9, 26),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal('2.00218'),
+	transaction_info: withdraw_bnds_sub_b,
+	start_balance: BigDecimal('6995873.5642'),
+	confirmed: true
+)
+
+value = BigDecimal('575106.83670')
+value_brl = BigDecimal('1152590.59')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 10, 21),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal('2.00413'),
+	transaction_info: withdraw_bnds_sub_b,
+	start_balance: BigDecimal('8370399.6889'),
+	confirmed: true
+)
+
+value = BigDecimal('1767422.50640')
+value_brl = BigDecimal('3548767')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 12, 8),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal('2.00788'),
+	transaction_info: withdraw_bnds_sub_b,
+	start_balance: BigDecimal('8945506.5256'),
+	confirmed: true
+)
+
+#Sub B interests
+
+value = BigDecimal('8672.18320')
+value_brl = BigDecimal('')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2015, 4, 15),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal(''),
+	transaction_info: interest_bnds_sub_b,
+	start_balance: BigDecimal('706945.8532')
+)
+
+value = BigDecimal('36793.90520')
+value_brl = BigDecimal('')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2015, 7, 15),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal(''),
+	transaction_info: interest_bnds_sub_b,
+	start_balance: BigDecimal('2069187.7810')
+)
+
+value = BigDecimal('41100.27689')
+value_brl = BigDecimal('')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2015, 10, 15),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal(''),
+	transaction_info: interest_bnds_sub_b,
+	start_balance: BigDecimal('2069187.7810')
+)
+
+value = BigDecimal('60317.66040')
+value_brl = BigDecimal('')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 1, 15),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal(''),
+	transaction_info: interest_bnds_sub_b,
+	start_balance: BigDecimal('3169503.2319')
+)
+
+value = BigDecimal('131258.76350')
+value_brl = BigDecimal('')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 4, 15),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal(''),
+	transaction_info: interest_bnds_sub_b,
+	start_balance: BigDecimal('6576619.0617')
+)
+
+value = BigDecimal('131258.76350')
+value_brl = BigDecimal('')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 7, 15),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal(''),
+	transaction_info: interest_bnds_sub_b,
+	start_balance: BigDecimal('6995873.5642')
+)
+
+value = BigDecimal('148184.55750')
+value_brl = BigDecimal('')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2016, 10, 15),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal(''),
+	transaction_info: interest_bnds_sub_b,
+	start_balance: BigDecimal('8370399.6889')
+)
+
+value = BigDecimal('190016.06960')
+value_brl = BigDecimal('')
+
+TransactionItem.create!(
+	value: value,
+	date: Date.new(2017, 1, 15),
+	value_brl: value_brl,
+	exchange_rate: BigDecimal(''),
+	transaction_info: interest_bnds_sub_b,
+	start_balance: BigDecimal('10712929.0320')
 )

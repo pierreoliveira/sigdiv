@@ -19,7 +19,7 @@ class ProjectionDebt
 
 			debt.transaction_infos.sort_by(&:order).reject(&:withdraw?).each do |transaction_info|
 
-				if (result.empty?) 
+				if (result.empty?)
 					self.balance_projection = debt.transaction_items.where('date <= ?', self.start_date).last.final_outstanding_balance
 				else 
 					self.balance_projection = result.last.final_outstanding_balance
