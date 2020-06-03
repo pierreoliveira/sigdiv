@@ -179,13 +179,36 @@
 </div>
 
 <script type="text/javascript">
+  $('#debt_category_interno').attr('checked', true);
+  categoryInterno();
+  
+  $(".category").on('change', function(e) {    
+    if ($(this).select('.category').val() == '1'){ 
+      disableWithdrawInputs(this);
+    } else {
+      enableInputs(this);
+    }
+  });
+
+  function disableWithdrawInputs(target){    
+    $(target).parents('.nested-fields').find('.transaction-info-base').attr("disabled", true);
+    $(target).parents('.nested-fields').find('.transaction-info-formula').attr("disabled", true);
+    $(target).parents('.nested-fields').find('.transaction-info-payment-day').attr("disabled", true);
+    $(target).parents('.nested-fields').find('.transaction-info-frequency').attr("disabled", true);
+    $(target).parents('.nested-fields').find('.transaction-info-bind-withdraw').attr("disabled", true);
+  };
+
+  function enableInputs(target){
+    $(target).parents('.nested-fields').find('*').removeAttr("disabled");
+  }
+
 
   $('#debt_category_interno').on( "click", function() {
-      categoryInterno();
+    categoryInterno();
   });
 
   $('#debt_category_externo').on( "click", function() {
-     categoryExterno();
+    categoryExterno();
   });
 
   function categoryInterno(){

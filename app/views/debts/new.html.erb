@@ -3,17 +3,3 @@
 <%= render 'form', debt: @debt %>
 
 <%= link_to t('back'), debts_path, class: 'btn pull-right' %>
-
-<script type="text/javascript">
-	
-	$('#debt_category_interno').attr('checked', true);
-	categoryInterno();
-	
-	$(".category option:selected").each(function() {
-    if ($(this).val() == '1'){ 
-    	$('#debt_transaction_infos_attributes_0_formula').attr("disabled", true);
-    	$('#debt_transaction_infos_attributes_0_payment_day').attr("disabled", true);
-    	$('#debt_transaction_infos_attributes_0_frequency_mensal').attr("disabled", true);   
-  	}
-  }); 
-</script>

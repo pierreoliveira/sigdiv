@@ -20,6 +20,7 @@ class Debt < ApplicationRecord
 	validates :currency, presence: true
 	validates :loan_term, presence: true
 	validates :decimal_places, presence: true
+	validate :valid_dates?
 
 	def self.search code_query = '', name_query = '', creditor_query = '', signature_year_query = '', status_query = ''
 		result = Debt.all
@@ -213,5 +214,15 @@ class Debt < ApplicationRecord
 
 		def interest_rate_per_month
 			interest_rate
+		end
+
+		def valid_dates?
+			if signature_date > grace_period				
+				errors.add(:signature_date, "deve ser anterior ao prazo de carência.")
+				errors.add(:grace_period, "deve ser posterior à data de assinatura.")
+			elsif grace_period > amortization_period				
+				errors.add(:grace_period, "deve ser anterior ao prazo de amortização.")
+				errors.add(:amortization_period, "deve ser posterior ao prazo de carência.")
+			end
 		end
 end

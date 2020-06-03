@@ -31,7 +31,7 @@ class DebtsController < ApplicationController
       if @debt.save
         format.html { redirect_to @debt, notice: I18n.t(:save_success) }
         format.json { render :show, status: :created, location: @debt }
-      else        
+      else
         format.html { render :new }
         format.json { render json: @debt.errors, status: :unprocessable_entity }
       end

@@ -1,14 +1,14 @@
 <div class='nested-fields'>
 	<div class="row">		
 
-    <div class="col-sm-2">	
+    <div class="col-sm-2 category-container">	
 		  <%= f.input :category_number, collection: TransactionInfo::BASIC_TYPES.map {|k, v| [k, v[:name]]}, label_method: :last, value_method: :first, selected: f.object.category_number, input_html: { class: 'category' } %>
 		</div>
 		<div class="col-2">
-			<%= f.input :base %>
+			<%= f.input :base, input_html: { class: 'transaction-info-base' } %>
 		</div>
    	<div class="col-sm">
-			<%= f.input :formula %>
+			<%= f.input :formula, input_html: { class: 'transaction-info-formula' } %>
 		</div>
 		<div class="col-sm-1 formula-info">
 		<!-- Button trigger modal -->
@@ -21,10 +21,10 @@
 	</div>
 	<div class="row">
 		<div class="col-sm-2">
-		  <%= f.input :payment_day %>
+		  <%= f.input :payment_day, input_html: { class: 'transaction-info-payment-day' } %>
 		</div>
 		<div class="col-sm-2">
-			<%= f.input :frequency, as: :radio_buttons, collection: TransactionInfo.frequencies.keys, label_method: :titleize %>
+			<%= f.input :frequency, as: :radio_buttons, collection: TransactionInfo.frequencies.keys, label_method: :titleize, input_html: { class: 'transaction-info-frequency' } %>
 		</div>
 		<div class="col-sm">
 		  <%= f.input :description %>
@@ -36,7 +36,7 @@
 		<div class="col-sm-2"></div>
 	</div>
 		<div class="col-sm">
-			<%= f.input :bind_withdraw%>
+			<%= f.input :bind_withdraw, input_html: { class: 'transaction-info-bind-withdraw' }%>
 		</div>
 
 	<hr>
