@@ -22,7 +22,6 @@ class FormulaService
 			
 			result = transaction.transaction_info.formula.dup
 			result.gsub!(",", '.')
-			
 			transaction.transaction_info.formula.gsub(/\[(\w*)\]/) do	
 				
 				klass = VARIABLES[$1].first				

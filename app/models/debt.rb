@@ -169,8 +169,9 @@ class Debt < ApplicationRecord
 		(grace_period.year * 12 + grace_period.month) - (signature_date.year * 12 + signature_date.month)
 	end
 
-	def until_first_payment_in_months
-		(interests.first.date.year * 12 + interests.first.date.month) - (signature_date.year * 12 + signature_date.month)
+	def until_first_payment_in_months		
+		interests.first.present? ? final_date = interests.first.date : final_date = grace_period
+		(final_date.year * 12 + final_date.month) - (signature_date.year * 12 + signature_date.month)
 	end
 
 	def paid_payments_count payment_type, end_date
@@ -180,9 +181,10 @@ class Debt < ApplicationRecord
 	def projection_start_date
 		if new_debt?
 			signature_date
-		elsif in_grace_period?
-			frequency = transaction_infos.find_by(category_number: 3).frequency
-			interests.last.date + TransactionInfo.frequencies[frequency].months
+		elsif in_grace_period?			
+			frequency = transaction_infos.find_by(category_number: 3).frequency			
+			return interests.last.date + TransactionInfo.frequencies[frequency].months if interests.present?
+			grace_period
 		elsif in_amortization_period?			
 			frequency = transaction_infos.find_by(category_number: 2).frequency
 			amortizations.present? ? amortizations.last.date + TransactionInfo.frequencies[frequency].months : grace_period
