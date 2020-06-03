@@ -95,6 +95,11 @@ class ProjectionDebt
 		end
 	end
 
+	# Próxima parcela
+	def next_instalment
+		outstanding_balance * instalment_formula_numerator / instalment_formula_denominator
+	end	
+
 	private
 		def method_missing(method_name, *args, &block)	    
 	    debt.send(method_name)

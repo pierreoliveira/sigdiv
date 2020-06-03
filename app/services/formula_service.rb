@@ -31,7 +31,7 @@ class FormulaService
 				
 				result.gsub!("[#{$1}]", send_method(object, method_name))		
 			end
-			
+						
 			result
 		end
 
