@@ -31,6 +31,7 @@ pt-BR:
         loan_term: Número de parcelas
         interest_rate: Taxa de juros
         decimal_places: Casas decimais
+        start_amt_next_month_to_grace_period: Início da amortização no mês seguinte
       creditor:
         name: Nome
         financial_agent: Agente financeiro      

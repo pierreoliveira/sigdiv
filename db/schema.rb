@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_06_094533) do
+ActiveRecord::Schema.define(version: 2020_06_04_170956) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,6 +60,7 @@ ActiveRecord::Schema.define(version: 2020_05_06_094533) do
     t.integer "loan_term"
     t.decimal "interest_rate"
     t.integer "decimal_places"
+    t.boolean "start_amt_next_month_to_grace_period"
   end
 
   create_table "transaction_infos", force: :cascade do |t|

@@ -27,7 +27,8 @@ cef = Debt.create!( "code" => 123456,
 					    "currency_id" => currency1.id,
 					    "interest_rate" => 0.005,
 					    "loan_term" => 240,
-					    "decimal_places" => 5 
+					    "decimal_places" => 5,
+					    start_amt_next_month_to_grace_period: true
 					    )
 
 caf = Debt.create!( code: 123789, 
@@ -47,7 +48,8 @@ caf = Debt.create!( code: 123789,
 							currency_id: currency2.id, 
 							loan_term: 16, 
 							interest_rate: 1.95,
-							"decimal_places" => 2)
+							"decimal_places" => 2,
+							start_amt_next_month_to_grace_period: false)
 
 bid = Debt.create!( code: 123799, 
 							contract_value: 26470000, 
@@ -66,7 +68,8 @@ bid = Debt.create!( code: 123799,
 							currency_id: currency2.id, 
 							loan_term: 40, 
 							interest_rate: 2.75,
-							"decimal_places" => 2)
+							"decimal_places" => 2,
+							start_amt_next_month_to_grace_period: false)
 
 bnds_sub_a = Debt.create!( code: 212345, 
 							contract_value:  6242000, 
@@ -85,7 +88,8 @@ bnds_sub_a = Debt.create!( code: 212345,
 							currency_id: currency1.id, 
 							loan_term: 72, 
 							interest_rate: 2.20,
-							"decimal_places" => 4)
+							"decimal_places" => 4,
+							start_amt_next_month_to_grace_period: false)
 
 bnds_sub_b = Debt.create!( code: 212346, 
 							contract_value:  21847000, 
@@ -104,7 +108,8 @@ bnds_sub_b = Debt.create!( code: 212346,
 							currency_id: currency1.id, 
 							loan_term: 72, 
 							interest_rate: 2.20,
-							"decimal_places" => 6)
+							"decimal_places" => 6,
+							start_amt_next_month_to_grace_period: false)
 
 #Charge.create!(name: 'Taxa administrativa', base: 2, debt: cef, count_days: true)
 #Charge.create!(name: 'Taxa de risco de crédito', base: 0.7, debt: cef, count_days: false)
