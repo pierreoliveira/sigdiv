@@ -95,7 +95,8 @@ class ProjectionDebt
 
 	def amt_in_grace_period? transaction_info, future_transaction_count
 		if transaction_info.amortization?
-			transaction_info.payment_date(self.start_date) + future_transaction_count.months - 1.month >= grace_period
+			amt_start = transaction_info.payment_date(self.start_date) + future_transaction_count.months
+			start_amt_next_month_to_grace_period? ? amt_start >= grace_period : amt_start - 1.month >= grace_period
 		else
 			true
 		end
