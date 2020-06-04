@@ -188,7 +188,7 @@ class Debt < ApplicationRecord
 			grace_period
 		elsif in_amortization_period?			
 			frequency = transaction_infos.find_by(category_number: 2).frequency
-			amortizations.present? ? amortizations.last.date + TransactionInfo.frequencies[frequency].months : grace_period
+			amortizations.present? ? amortizations.last.date + TransactionInfo.frequencies[frequency].months : signature_date
 		else done?
 			false
 		end
@@ -218,11 +218,11 @@ class Debt < ApplicationRecord
 
 		def valid_dates?
 			if signature_date > grace_period				
-				errors.add(:signature_date, "deve ser anterior ao prazo de carência.")
-				errors.add(:grace_period, "deve ser posterior à data de assinatura.")
+				errors.add(:signature_date, "deve ser anterior ao prazo de carência")
+				errors.add(:grace_period, "deve ser posterior à data de assinatura")
 			elsif grace_period > amortization_period				
-				errors.add(:grace_period, "deve ser anterior ao prazo de amortização.")
-				errors.add(:amortization_period, "deve ser posterior ao prazo de carência.")
+				errors.add(:grace_period, "deve ser anterior ao prazo de amortização")
+				errors.add(:amortization_period, "deve ser posterior ao prazo de carência")
 			end
 		end
 end
