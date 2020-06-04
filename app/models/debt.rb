@@ -180,17 +180,16 @@ class Debt < ApplicationRecord
 	end
 
 	def projection_start_date
-		if new_debt?
-			signature_date
-		elsif in_grace_period?			
-			frequency = transaction_infos.find_by(category_number: 3).frequency			
-			return interests.last.date + TransactionInfo.frequencies[frequency].months if interests.present?
-			grace_period
-		elsif in_amortization_period?			
+		if amortizations.present?
 			frequency = transaction_infos.find_by(category_number: 2).frequency
-			amortizations.present? ? amortizations.last.date + TransactionInfo.frequencies[frequency].months : signature_date
+			amortizations.last.date + TransactionInfo.frequencies[frequency].months
+		elsif interests.present?	
+			frequency = transaction_infos.find_by(category_number: 3).frequency			
+			interests.last.date + TransactionInfo.frequencies[frequency].months		
 		else done?
 			false
+		else
+			signature_date
 		end
 	end
 
