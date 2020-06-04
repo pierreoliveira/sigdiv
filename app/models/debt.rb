@@ -186,7 +186,7 @@ class Debt < ApplicationRecord
 		elsif interests.present?	
 			frequency = transaction_infos.find_by(category_number: 3).frequency			
 			interests.last.date + TransactionInfo.frequencies[frequency].months		
-		else done?
+		elsif done?
 			false
 		else
 			signature_date
