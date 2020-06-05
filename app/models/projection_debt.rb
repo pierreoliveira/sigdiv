@@ -17,7 +17,7 @@ class ProjectionDebt
 
 		projection_period.each_with_index do |future_transaction_count, index|
 
-			debt.transaction_infos.sort_by(&:order).reject(&:withdraw?).each do |transaction_info|
+			debt.transaction_infos.sort_by(&:order).reject(&:withdraw?).reject(&:extra_event?).each do |transaction_info|
 
 				if (result.empty?)
 					if self.start_date == signature_date

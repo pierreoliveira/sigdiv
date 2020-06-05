@@ -54,6 +54,10 @@ class TransactionInfo < ApplicationRecord
 	def charge?
 		category_number == 4
 	end
+
+	def extra_event?
+		category_number == 5		
+	end
 	
 	def order
 		category.order
