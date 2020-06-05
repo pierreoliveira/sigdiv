@@ -53,14 +53,13 @@
     $('.currency').mask('#.##0,00000', {reverse: true});
   };
 
-  $('div.transaction_item_formula').on('keyup', 'input', function(e) {    
-    $.get('/formulas/show/' + $('.transaction_item_formula input').val(), function(data){
-      $('.transaction_item_value').find('input').val('oi')
-    }).done(function(data){
-      console.log('oi')
-      $('.transaction_item_value').find('input').val('oi')
-    })
-  })
+  $('div.transaction_item_formula').on('keyup', 'input', function(e) {
+    $.get('/formulas/show/' + $('.transaction_item_formula input').val() + '.json')
+    .done(function( data ) {       
+      $('.transaction_item_value input').val(data.response);  
+    });
+
+  });
 
 </script>
 
