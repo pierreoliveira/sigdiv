@@ -2,7 +2,8 @@ class TransactionInfo < ApplicationRecord
 	BASIC_TYPES = { 1 => {name: 'Desembolso', operation: '+', slug: 'D', order: 1}, 							    
 									2 => {name: 'Amortização', operation: '-', slug: 'A', order: 4},
 									3 => {name: 'Juros', operation: '-', slug: 'J', order: 2},
-									4 => {name: 'Encargos', operation: '-' , slug: 'E', order: 3} }
+									4 => {name: 'Encargos', operation: '-' , slug: 'E', order: 3},
+									5 => {name: 'Encargos extraordinários', operation: '-', slug: 'EE', order: 5} }
 	
 	enum frequency: { mensal: 1, 
 										trimestral: 3, 
@@ -34,12 +35,20 @@ class TransactionInfo < ApplicationRecord
 		OpenStruct.new(BASIC_TYPES[category_number])
 	end
 
+	def category_name
+		category.name
+	end
+
 	def withdraw?
 		category_number == 1
 	end
 
 	def amortization?
 		category_number == 2
+	end
+
+	def interest?
+		category_number == 3
 	end
 
 	def charge?

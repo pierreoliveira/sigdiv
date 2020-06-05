@@ -12,7 +12,7 @@ class TransactionItemsController < ApplicationController
   # GET :debt_id/transaction/new
   def new  	
     @transaction_item = TransactionItem.new()
-    @transaction_item.init(@debt, params[:category_number])
+    @transaction_item.debt = @debt
     render :new, layout: false
   end
 

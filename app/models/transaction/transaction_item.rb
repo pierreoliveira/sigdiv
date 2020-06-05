@@ -27,11 +27,6 @@ class TransactionItem < ApplicationRecord
 		result
 	end
 
-	def init(debt, category_number)
-		self.debt = debt
-		self.transaction_info = debt.transaction_infos.find_by(category_number: category_number)
-	end
-
 	def future_transaction?
 		if new_record? || (withdraw? && !confirmed?)
 			true

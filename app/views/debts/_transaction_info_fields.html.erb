@@ -1,8 +1,7 @@
 <div class='nested-fields'>
 	<div class="row">		
-
     <div class="col-sm-2 category-container">	
-		  <%= f.input :category_number, collection: TransactionInfo::BASIC_TYPES.map {|k, v| [k, v[:name]]}, label_method: :last, value_method: :first, selected: f.object.category_number, input_html: { class: 'category' } %>
+		  <%= f.input :category_number,collection: TransactionInfo::BASIC_TYPES.map {|k, v| [k, v[:name]] }, label_method: :last, value_method: :first, selected: f.object.category_number, input_html: { class: 'category' } %>
 		</div>
 		<div class="col-2">
 			<%= f.input :base, input_html: { class: 'transaction-info-base' } %>

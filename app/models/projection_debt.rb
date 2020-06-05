@@ -21,7 +21,7 @@ class ProjectionDebt
 
 				if (result.empty?)
 					if self.start_date == signature_date
-						self.balance_projection = debt.transaction_items.last.final_outstanding_balance
+						self.balance_projection = debt.transaction_items.where.not(confirmed: false).last.final_outstanding_balance
 					else
 						self.balance_projection = debt.transaction_items.where('date <= ?', self.start_date).last.final_outstanding_balance
 					end
@@ -39,12 +39,12 @@ class ProjectionDebt
 					future_transaction.value = FormulaService.eval(future_transaction)
 					future_transaction.value_brl = future_transaction.value * exchange_rate
 
-					result << future_transaction unless transaction_info.bind_withdraw? && paid_in?
+					result << future_transaction unless (transaction_info.bind_withdraw? && paid_in?) || (transaction_info.interest? && balance_projection.zero?)
 
 					self.amortizations_count += 1 if transaction_info.amortization?
 				end
 			end
-		end unless withdraws.empty?
+		end unless withdraws.where.not(confirmed: false).empty?
 
 		result
 	end

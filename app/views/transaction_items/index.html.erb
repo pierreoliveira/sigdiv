@@ -105,9 +105,7 @@
       <span hidden class="currency-name"><%= @debt.currency.name %></span>      
     </ul>
     <br>
-    <button type="button" class="btn btn-success new-withdraw" data-toggle="modal" data-target="#transactionModal" data-path="<%= new_debt_transaction_item_path(@debt, category_number: 1) %>">Registrar desembolso</button>
-    <br><br>
-    <button type="button" class="btn btn-success new-withdraw" data-toggle="modal" data-target="#transactionModal" data-path="<%= new_debt_transaction_item_path(@debt, category_number: 2) %>">Registrar movimentação</button>
+    <button type="button" class="btn btn-success new-withdraw" data-toggle="modal" data-target="#transactionModal" data-path="<%= new_debt_transaction_item_path(@debt) %>">Registrar movimentação</button>
   </div>  
 </div>
 
