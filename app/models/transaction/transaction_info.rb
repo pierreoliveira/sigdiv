@@ -3,7 +3,7 @@ class TransactionInfo < ApplicationRecord
 									2 => {name: 'Amortização', operation: '-', slug: 'A', order: 4},
 									3 => {name: 'Juros', operation: '-', slug: 'J', order: 2},
 									4 => {name: 'Encargos', operation: '-' , slug: 'E', order: 3},
-									5 => {name: 'Encargos extraordinários', operation: '-', slug: 'EE', order: 5} }
+									5 => {name: 'Eventos extraordinários', operation: '-', slug: 'EE', order: 5} }
 	
 	enum frequency: { mensal: 1, 
 										trimestral: 3, 
