@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%= favicon_link_tag asset_path("sigdiv.png") %>
+    <title>SIGDIV</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">    
+    
+    <meta charset="utf-8" />
+  </head>
+
+  <body class="report">
+		<table style="width:85%;">
+			<tr>
+		  	<td>		  	
+					<%= wicked_pdf_image_tag 'logo_niteroi.jpg' %>
+				</td>				
+			
+				<td style="text-align:center;">				
+					<h5><strong>PREFEITURA NITERÓI - SECRETARIA MUNICIPAL DE FAZENDA</strong></h5>
+				</td>
+			</tr>
+		</table>
+
+		<h6><strong>A - Identificação do Contrato</strong></h6>
+		<hr>
+		<table style="width:100%;">
+		  <tr>
+		    <td style="width:50%;">
+		      <strong>Tipo: </strong><%= @projection_debt.category %><br>
+		      <strong>Mutuário: </strong>Prefeitura Municipal de Niterói<br>
+		      <strong>Credor: </strong><%= @projection_debt.creditor.name %><br>
+		      <strong>Valor do Contrato: </strong><%= 'R$ ' + big_decimal_to_currency_cents(@projection_debt.contract_value) %><br>
+		      <strong>Fator de Conversão do Mês (moeda original) REAL </strong>-<br>
+		      <strong>Fator de Conversão do Mês (em Real)</strong>-<br>
+		      <strong>Taxa de Encargos: </strong>
+		      	<%= @projection_debt.transaction_infos.reduce('') { |result, info| info.charge? ? result + "#{info.description}: #{info.base}% " : result } %><br>
+		      <strong>Taxa de juros: </strong><%= @projection_debt.interest_rate %>%<br>
+		    </td>
+		    <td style="width:50%;">
+		      <strong>Data da Assinatura: </strong><%= @projection_debt.signature_date %><br>
+		      <strong>Agente Financeiro: </strong><%= @projection_debt.creditor.name %><br>
+		      <strong>Moeda Original: </strong><%= @projection_debt.currency.name %><br>
+		      <strong>Prazo de Carência: </strong><%= @projection_debt.grace_period %><br>
+		      <strong>Prazo de Amortização: </strong><%= @projection_debt.amortization_period %><br>
+		      <strong>Forma de Pagamento: </strong><%= @projection_debt.amortization_type %><br>
+		      <strong>Objetivo da Operação: </strong><%= @projection_debt.purpose %><br>
+		    </td>
+		  </tr>
+		</table>
+		<table style="width:100%;">
+			<tr>
+				<td style="width:50%;"></td>
+		    <td style="width:50%;">
+					<div class="alert alert-primary text-left">
+					  <strong>
+						  Fator de Conversão em <%= @start_date.end_of_month %>:						  
+						  <% last_rate = @projection_debt.debt.last_exchange_rate(@start_date) %>
+						  <%= last_rate.present? ? last_rate : "-" %>
+						</strong>
+					</div>
+				</td>
+			</tr>
+		</table>
+
+		<h6><strong>B - Esquema de Liberação de Recursos</strong></h6>
+		<hr>
+		<table style="width: 100%">
+		  <tr>
+		    <td style="width: 55%">
+					<h6><strong>1 - Parcelas Recebidas </strong></h6>
+
+					<table class="table table-sm table-bordered text-right">
+						<thead class="thead-light">
+							<tr>
+								<th style="text-align:right;">Mês/Ano</th>
+								<th style="text-align:right;">Valores - Moeda Original</th>
+								<th style="text-align:right;">Valores em R$</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% sum_values = 0 %>
+							<% sum_values_brl = 0 %>
+							<% @projection_debt.debt.withdraws_values_by_year(@start_date).each do |year_values|%>
+								<tr>
+									<td><%= year_values[0].to_i %></td>
+									<td><%= big_decimal_to_currency_cents(year_values[1]) %></td>
+									<td><%= big_decimal_to_currency_cents(year_values[2]) %></td>
+								</tr>
+								<% sum_values += year_values[1] %>
+								<% sum_values_brl += year_values[2] %>
+							<% end %>
+								<tr>
+									<td>TOTAL</td>
+									<td><%= big_decimal_to_currency_cents(sum_values) %></td>
+									<td><%= big_decimal_to_currency_cents(sum_values_brl) %></td>
+								</tr>
+						</tbody>
+					</table>
+				</td>
+			 	
+			 	<td style="width:5%;vertical-align:top;"></td>
+
+			 	<td style="width:40%;vertical-align:top;">
+					<h6><strong>2 - Parcelas à Receber </strong></h6>
+
+					<table class="table table-sm table-bordered text-right">
+						<thead class="thead-light">
+							<tr>
+								<th style="text-align:right;">Mês/Ano</th>
+								<th style="text-align:right;">Valores - Moeda Original</th>	
+							</tr>
+						</thead>
+						<tbody>
+								<tr>
+									<td></td>
+									<td></td>				
+								</tr>			
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</table>
+
+		<h6><strong>C - Esquema de Pagamentos</strong></h6>
+		<hr>
+		<h6><strong>1- Realizado no Exercício</strong></h6>
+
+		<table class="table table-sm table-bordered text-right">
+			<thead class="thead-light">
+				<tr>
+					<th style="text-align:right;"></th>
+					<th style="text-align:right;">Principal em R$</th>
+					<th style="text-align:right;">Juros em R$</th>
+					<th style="text-align:right;">Outros encargos em R$</th>
+					<th style="text-align:right;">Total</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>No mês:</td>
+					<td><%= big_decimal_to_currency_cents(@projection_debt.debt.transaction_items_month_total(@start_date, 2)) %></td>					
+					<td><%= big_decimal_to_currency_cents(@projection_debt.debt.transaction_items_month_total @start_date, 3) %></td>
+					<td><%= big_decimal_to_currency_cents(@projection_debt.debt.transaction_items_month_total @start_date, 4) %></td>
+					<td><%= big_decimal_to_currency_cents(@projection_debt.debt.transaction_items_month_total @start_date) %></td>
+				</tr>
+
+				<tr>
+					<% paid_principal_year_amount =  @projection_debt.debt.transaction_items_year_total @start_date, 2 %>
+					<% paid_interest_year_amount =  @projection_debt.debt.transaction_items_year_total @start_date, 3 %>
+					<% paid_charges_year_amount =  @projection_debt.debt.transaction_items_year_total @start_date, 4 %>
+					<% paid_total_year_amount =  @projection_debt.debt.transaction_items_year_total @start_date %>
+
+					<td>Até o mês:</td>
+					<td><%= big_decimal_to_currency_cents(paid_principal_year_amount) %></td>
+					<td><%= big_decimal_to_currency_cents(paid_interest_year_amount) %></td>
+					<td><%= big_decimal_to_currency_cents(paid_charges_year_amount) %></td>
+					<td><%= big_decimal_to_currency_cents(paid_total_year_amount) %></td>			
+				</tr>
+
+			</tbody>
+
+		</table>
+
+		<h6><strong>2- A Realizar no Exercício</strong></h6>
+
+		<table class="table table-sm table-bordered text-right">
+			<thead class="thead-light">
+				<tr>
+					<th style="text-align:right;"></th>
+					<th style="text-align:right;">Principal em R$</th>
+					<th style="text-align:right;">Juros em R$</th>
+					<th style="text-align:right;">Outros encargos em R$</th>
+					<th style="text-align:right;">Total</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Vencido:</td>
+					<td></td>
+				</tr>
+
+				<% current_year_lacking_principal = @projection_debt.brl_lacking_total_by @start_date, 2 %>
+				<% current_year_lacking_principal_brl = @projection_debt.brl_lacking_total_by  @start_date, 2 %>
+				<% current_year_lacking_interest_brl = @projection_debt.brl_lacking_total_by @start_date, 3 %>
+				<% current_year_lacking_charges_brl = @projection_debt.brl_lacking_total_by @start_date, 4 %>
+				<% current_year_lacking = current_year_lacking_principal_brl + current_year_lacking_interest_brl + current_year_lacking_charges_brl %>
+
+				<tr>
+					<td>A Vencer:</td>
+					<td><%= big_decimal_to_currency_cents current_year_lacking_principal_brl %></td>
+					<td><%= big_decimal_to_currency_cents current_year_lacking_interest_brl %></td>
+					<td><%= big_decimal_to_currency_cents current_year_lacking_charges_brl %></td>
+					<td><%= big_decimal_to_currency_cents current_year_lacking %></td>
+				</tr>				
+
+				<tr>
+					<td>Total:</td>					
+					<td><%= big_decimal_to_currency_cents current_year_lacking_principal_brl %></td>
+					<td><%= big_decimal_to_currency_cents current_year_lacking_interest_brl %></td>
+					<td><%= big_decimal_to_currency_cents current_year_lacking_charges_brl %></td>
+					<td><%= big_decimal_to_currency_cents current_year_lacking %></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h6><strong>3- A Realizar de Outros Exercícios</strong></h6>
+
+		<table class="table table-sm table-bordered text-right">
+			<thead class="thead-light">
+				<tr>
+					<th style="text-align:right;"></th>
+					<th style="text-align:right;">Principal em R$</th>
+					<th style="text-align:right;">Juros em R$</th>
+					<th style="text-align:right;">Outros encargos em R$</th>
+					<th style="text-align:right;">Total</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Vencido:</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+
+				<tr>
+					<td>A Vencer:</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+
+				<tr>
+					<td>Total:</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h6><strong>4- A Realizar nos Próximos Exercícios</strong></h6>
+
+		<table class="table table-sm table-bordered text-right">
+			<thead class="thead-light">
+				<tr class="d-flex">
+					<th class="col-xs-2" style="text-align:right;">Ano</th>
+					<th class="col-xs-2" style="text-align:right;">Principal em Moeda Original</th>
+					<th class="col-xs-2" style="text-align:right;">Principal em R$</th>
+					<th class="col-xs-2" style="text-align:right;">Juros em R$</th>
+					<th class="col-xs-2" style="text-align:right;">Outros encargos em R$</th>
+					<th class="col-xs-2" style="text-align:right;">Total</th>
+				</tr>
+			</thead>
+			<tbody>
+
+				<% total_principal = 0 %>
+				<% total_principal_brl = 0 %>
+				<% total_interest_brl = 0 %>
+				<% total_charges_brl = 0 %>
+				<% total = 0 %>
+
+				<% ((@start_date.year + 1)..@projection_debt.last_year).each do |year| %>
+					
+					<% year_total_principal = @projection_debt.brl_total_by year, 2 %>
+					<% year_total_principal_brl = @projection_debt.brl_total_by year, 2 %>
+					<% year_total_interest_brl = @projection_debt.brl_total_by year, 3 %>
+					<% year_total_charges_brl = @projection_debt.brl_total_by year, 4 %>
+					<% year_total = year_total_principal_brl + year_total_interest_brl + year_total_charges_brl %>
+
+					<tr class="d-flex">			
+						<td class="col-xs-2"><%= year %></td>
+						<td class="col-xs-2"><%= big_decimal_to_currency_cents(year_total_principal) %></td>
+						<td class="col-xs-2"><%= big_decimal_to_currency_cents(year_total_principal_brl) %></td>
+						<td class="col-xs-2"><%= big_decimal_to_currency_cents(year_total_interest_brl) %></td>
+						<td class="col-xs-2"><%= big_decimal_to_currency_cents(year_total_charges_brl) %></td>
+						<td class="col-xs-2"><%= big_decimal_to_currency_cents(year_total) %></td>
+					</tr>
+
+					<% total_principal += year_total_principal %>
+					<% total_principal_brl += year_total_principal_brl %>
+					<% total_interest_brl += year_total_interest_brl %>
+					<% total_charges_brl += year_total_charges_brl %>
+					<% total += year_total %>
+				<% end %>
+			</tbody>
+		</table>
+
+		<h6><strong>5- Saldo Devedor</strong></h6>
+
+		<table class="table table-sm table-bordered text-right">	
+			<thead class="thead-light">
+				<tr>
+					<th style="text-align:right;">Principal em R$</th>
+					<th style="text-align:right;">Juros em R$</th>
+					<th style="text-align:right;">Outros encargos em R$</th>
+					<th style="text-align:right;">Total</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><%= big_decimal_to_currency_cents(total_principal_brl + current_year_lacking_principal) %></td>
+					<td><%= big_decimal_to_currency_cents(total_interest_brl + current_year_lacking_interest_brl) %></td>
+					<td><%= big_decimal_to_currency_cents(total_charges_brl + current_year_lacking_charges_brl) %></td>
+					<td><%= big_decimal_to_currency_cents(total + current_year_lacking) %></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h6><strong>D - Observações</strong></h6>
+		<p><%= @projection_debt.notes %></p>
+		<hr>
+		<div class="card">
+		  <div class="card-body">        
+		    <p class="card-text">
+		    	<br>
+		    	<br>
+		    </p>
+		  </div>
+		</div>
+
+
+		<table class="table table-sm table-bordered">
+			<thead class="thead-light">
+				<tr>
+					<th><h6><strong>E - Local e Data</strong></h6></th>
+					<th><h6><strong>F - Órgão</strong></h6></th>
+					<th><h6><strong>G - Assinatura do Responsável</strong></h6></th>
+				</tr>
+			</thead>
+			<tbody>
+				<td>Niterói, 28 de fevereiro de 2019.</td>
+				<td>Secretaria Municipal de Fazenda de Niterói</td>
+				<td></td>
+			</tbody>
+		</table>
+	</body>
+</html>

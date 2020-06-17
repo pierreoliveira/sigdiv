@@ -131,7 +131,7 @@ withdraw_bid = TransactionInfo.create!(category_number: 1, debt: bid, payment_da
 amortization_bid = TransactionInfo.create!(category_number: 2, debt: bid, payment_day:'15', formula: "[SALDO] / ([PARCELAS] - [N_PARCELA])", slug: 'A', frequency: 6)
 interest_bid = TransactionInfo.create!(category_number: 3, debt: bid, payment_day:'15', formula: "[SALDO] * ((1.95 / 100 / 360) * [DELTA_DATA])", slug: 'J', frequency: 6)
 charges_bid = TransactionInfo.create!(category_number: 4, debt: bid, payment_day:'15', base: 0.35, description:'Comissão de crédito', formula: "([VALOR_CONTRATO] - [SALDO]) * ((0.35 / 100 / 360) * [DELTA_DATA])", slug: 'CC', frequency: 6, bind_withdraw: true)
-ec_bid = TransactionInfo.create!(category_number: 5, debt: cef_bid, slug: 'EE')
+# ec_bid = TransactionInfo.create!(category_number: 5, debt: cef_bid, slug: 'EE')
 
 withdraw_bnds_sub_a = TransactionInfo.create!(category_number: 1, debt: bnds_sub_a, payment_day:'15', formula: "", slug: 'D')
 amortization_bnds_sub_a = TransactionInfo.create!(category_number: 2, debt: bnds_sub_a, payment_day:'15', formula: "[SALDO] / ([PARCELAS] - [N_PARCELA])", slug: 'A', frequency: 1)
